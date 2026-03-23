@@ -1,0 +1,79 @@
+# .claudeignore — Claude Code Optimizer
+# By Huzefa Nalkheda Wala | github.com/huzaifa525
+
+# Dependencies
+node_modules/
+vendor/
+.venv/
+__pycache__/
+*.pyc
+
+# Build output
+dist/
+build/
+out/
+.next/
+.nuxt/
+target/
+
+# Lock files (large, not useful for Claude)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+Pipfile.lock
+poetry.lock
+Cargo.lock
+composer.lock
+
+# Minified/generated files
+*.min.js
+*.min.css
+*.bundle.js
+*.chunk.js
+*.map
+
+# Assets (binary, not readable)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.svg
+*.woff
+*.woff2
+*.ttf
+*.eot
+*.mp4
+*.mp3
+*.pdf
+
+# IDE/editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment & secrets
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+
+# Logs
+*.log
+logs/
+
+# Coverage & reports
+coverage/
+.nyc_output/
+htmlcov/
+
+# Docker volumes
+data/
+tmp/
