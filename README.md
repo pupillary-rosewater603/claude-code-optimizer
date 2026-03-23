@@ -4,7 +4,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/claude-code-optimizer.svg)](https://www.npmjs.com/package/claude-code-optimizer)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> **Created by [Huzefa Nalkheda Wala](https://huzefanalkhedawala.in/)** — AI Product Engineer \| IIT Ropar \| [GitHub](https://github.com/huzaifa525) \| [LinkedIn](https://linkedin.com/in/huzefanalkheda) \| [HuggingFace](https://huggingface.co/huzaifa525)
+> **Created by [Huzefa Nalkheda Wala](https://huzefanalkhedawala.in/)** — AI Product Engineer at Ruby CRM / CleverFlow \| [GitHub](https://github.com/huzaifa525) \| [LinkedIn](https://linkedin.com/in/huzefanalkheda) \| [HuggingFace](https://huggingface.co/huzaifa525)
 
 A complete toolkit to make Claude Code faster, cheaper, and smarter when working with your codebase.
 
@@ -539,7 +539,7 @@ Browse them on [GitHub](https://github.com/huzaifa525/claude-code-optimizer/tree
 | HuggingFace | [huzaifa525](https://huggingface.co/huzaifa525) |
 | Medium | [huzefanalkheda](https://huzefanalkheda.medium.com/) |
 
-Currently building enterprise AI systems at CleverFlow (Dubai/India). IIT Ropar AI Program. 45+ production features shipped with 99.5% uptime.
+Currently building enterprise AI systems at Ruby CRM / CleverFlow (Dubai). 45+ production features shipped with 99.5% uptime.
 
 ## License
 
