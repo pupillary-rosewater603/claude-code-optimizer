@@ -1,0 +1,44 @@
+name: Submit a Skill
+description: Contribute a new skill to the project
+labels: ["skill", "contribution"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Skill name
+      placeholder: "my-skill"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      placeholder: "What does this skill do and when should it be used?"
+    validations:
+      required: true
+  - type: dropdown
+    id: auto-invoke
+    attributes:
+      label: Should it auto-invoke?
+      options:
+        - "No — manual only (/skill-name)"
+        - "Yes — Claude triggers automatically"
+    validations:
+      required: true
+  - type: dropdown
+    id: context
+    attributes:
+      label: Runs in
+      options:
+        - Main context
+        - Forked subagent (context: fork)
+    validations:
+      required: true
+  - type: textarea
+    id: skill-content
+    attributes:
+      label: SKILL.md content
+      description: Paste the full SKILL.md with frontmatter
+      render: markdown
+    validations:
+      required: true
