@@ -63,26 +63,93 @@ claude-code-optimizer/
     └── hooks-reference.md        # Hook recipes
 ```
 
-## Quick Start
+## Installation
 
-### Option 1: Auto Setup
+### npx (Windows, Mac, Linux — requires Node.js)
 
 ```bash
-# Clone the repo
-git clone https://github.com/YOUR_USERNAME/claude-code-optimizer.git
+# Install globally (recommended)
+npx claude-code-optimizer
 
-# Run setup in your project directory
-cd /path/to/your-project
+# Or use the short alias
+npx cco
+```
+
+**Other npx commands:**
+
+```bash
+# Install to current project only
+npx claude-code-optimizer --project
+
+# Uninstall
+npx claude-code-optimizer --uninstall
+
+# Help
+npx claude-code-optimizer --help
+```
+
+### curl (Mac, Linux, WSL)
+
+```bash
+# Install globally
+curl -sL https://raw.githubusercontent.com/huzaifa525/claude-code-optimizer/main/scripts/install.sh | bash
+
+# Uninstall
+curl -sL https://raw.githubusercontent.com/huzaifa525/claude-code-optimizer/main/scripts/uninstall.sh | bash
+```
+
+### PowerShell (Windows — no Node.js needed)
+
+```powershell
+# Install globally
+irm https://raw.githubusercontent.com/huzaifa525/claude-code-optimizer/main/scripts/install.ps1 | iex
+```
+
+### Manual Setup
+
+```bash
+git clone https://github.com/huzaifa525/claude-code-optimizer.git
+cd your-project
 bash /path/to/claude-code-optimizer/scripts/setup.sh
 ```
 
-### Option 2: Manual Setup
+### What Gets Installed
 
-1. Copy `templates/CLAUDE.md` to your project root
-2. Copy `templates/.claude/` to your project
-3. Copy `templates/.claudeignore` to your project root
-4. Edit `CLAUDE.md` with your project-specific details
-5. Edit rules in `.claude/rules/` for your stack
+All methods install to `~/.claude/` (global, applies to all projects):
+
+```
+~/.claude/
+├── skills/                  # 4 custom skills
+│   ├── explore-area/        #   Deep codebase exploration
+│   ├── gen-context/         #   Generate project context
+│   ├── smart-edit/          #   Pattern-aware editing
+│   └── token-check/         #   Token usage analysis
+├── rules/                   # 4 path-scoped rules
+│   ├── frontend.md          #   Frontend conventions
+│   ├── backend.md           #   Backend conventions
+│   ├── database.md          #   Database rules
+│   └── testing.md           #   Testing patterns
+├── hooks/                   # 3 automation hooks
+│   ├── generate-context.sh  #   Session start context
+│   ├── protect-files.sh     #   Block sensitive file edits
+│   └── filter-test-output.sh #  Filter verbose test output
+├── CLAUDE.md.template       # Copy to project as CLAUDE.md
+└── claudeignore.template    # Copy to project as .claudeignore
+```
+
+### Post-Install
+
+```bash
+# Copy templates to your project
+cp ~/.claude/CLAUDE.md.template ./CLAUDE.md
+cp ~/.claude/claudeignore.template ./.claudeignore
+
+# Edit with your project details
+# Then start Claude Code and try:
+#   /explore-area src/
+#   /gen-context
+#   /token-check
+```
 
 ## How It Works
 
