@@ -35,169 +35,346 @@ Token Usage Comparison:
 └─────────────────────────────────┴──────────────────┘
 ```
 
-## What's Included
-
-```
-claude-code-optimizer/
-├── templates/                    # Copy these into your project
-│   ├── CLAUDE.md                 # Main project instructions template
-│   ├── .claude/
-│   │   ├── rules/                # Path-scoped rules (lazy-loaded)
-│   │   │   ├── frontend.md
-│   │   │   ├── backend.md
-│   │   │   ├── database.md
-│   │   │   └── testing.md
-│   │   ├── skills/               # Custom skills
-│   │   │   ├── explore-area/
-│   │   │   │   └── SKILL.md
-│   │   │   └── gen-context/
-│   │   │       └── SKILL.md
-│   │   └── hooks/                # Automation hooks
-│   │       ├── generate-context.sh
-│   │       └── protect-files.sh
-│   └── .claudeignore             # Files Claude should skip
-├── examples/                     # Real-world examples
-│   ├── nextjs-app/
-│   ├── express-api/
-│   ├── python-fastapi/
-│   └── monorepo/
-├── scripts/
-│   └── setup.sh                  # Auto-setup script
-└── docs/
-    ├── strategies.md             # All optimization strategies explained
-    ├── token-guide.md            # Understanding token usage
-    └── hooks-reference.md        # Hook recipes
-```
-
 ## Installation
+
+Install it — everything sets up automatically. No extra commands needed.
 
 ### npm (Windows, Mac, Linux)
 
 ```bash
-# Install globally (recommended)
 npm i -g claude-code-optimizer
-
-# Then run
-claude-code-optimizer
-# or
-cco
 ```
 
-### npx (no install needed)
-
-```bash
-# Run directly
-npx claude-code-optimizer
-
-# Or use the short alias
-npx cco
-```
-
-**Other commands:**
-
-```bash
-# Install to current project only
-npx claude-code-optimizer --project
-
-# Uninstall
-npx claude-code-optimizer --uninstall
-
-# Help
-npx claude-code-optimizer --help
-```
+That's it. Skills, rules, hooks, and templates are installed to `~/.claude/` automatically.
 
 ### curl (Mac, Linux, WSL)
 
 ```bash
-# Install globally
 curl -sL https://raw.githubusercontent.com/huzaifa525/claude-code-optimizer/main/scripts/install.sh | bash
-
-# Uninstall
-curl -sL https://raw.githubusercontent.com/huzaifa525/claude-code-optimizer/main/scripts/uninstall.sh | bash
 ```
 
 ### PowerShell (Windows — no Node.js needed)
 
 ```powershell
-# Install globally
 irm https://raw.githubusercontent.com/huzaifa525/claude-code-optimizer/main/scripts/install.ps1 | iex
 ```
 
-### Manual Setup
+### Uninstall
 
 ```bash
-git clone https://github.com/huzaifa525/claude-code-optimizer.git
-cd your-project
-bash /path/to/claude-code-optimizer/scripts/setup.sh
-```
+# npm
+npx claude-code-optimizer --uninstall
 
-### What Gets Installed
-
-All methods install to `~/.claude/` (global, applies to all projects):
-
-```
-~/.claude/
-├── skills/                  # 4 custom skills
-│   ├── explore-area/        #   Deep codebase exploration
-│   ├── gen-context/         #   Generate project context
-│   ├── smart-edit/          #   Pattern-aware editing
-│   └── token-check/         #   Token usage analysis
-├── rules/                   # 4 path-scoped rules
-│   ├── frontend.md          #   Frontend conventions
-│   ├── backend.md           #   Backend conventions
-│   ├── database.md          #   Database rules
-│   └── testing.md           #   Testing patterns
-├── hooks/                   # 3 automation hooks
-│   ├── generate-context.sh  #   Session start context
-│   ├── protect-files.sh     #   Block sensitive file edits
-│   └── filter-test-output.sh #  Filter verbose test output
-├── CLAUDE.md.template       # Copy to project as CLAUDE.md
-└── claudeignore.template    # Copy to project as .claudeignore
+# curl
+curl -sL https://raw.githubusercontent.com/huzaifa525/claude-code-optimizer/main/scripts/uninstall.sh | bash
 ```
 
 ### Post-Install
 
+Copy the templates to your project and fill in your details:
+
 ```bash
-# Copy templates to your project
 cp ~/.claude/CLAUDE.md.template ./CLAUDE.md
 cp ~/.claude/claudeignore.template ./.claudeignore
-
-# Edit with your project details
-# Then start Claude Code and try:
-#   /explore-area src/
-#   /gen-context
-#   /token-check
 ```
 
-## How It Works
+---
 
-### Layer 0 — Always Loaded (~50 lines)
+## What Gets Installed
 
-`CLAUDE.md` in your project root. Contains:
-- Build/test commands
-- Entry point map (5-6 key files)
-- Request/data flow diagram
+### Skills (Custom Slash Commands)
+
+Skills are commands you can invoke inside Claude Code with `/skill-name`. They run as specialized prompts that guide Claude to work smarter.
+
+#### `/explore-area [directory]`
+
+**What it does:** Deep exploration of a codebase area before making changes. Reads entry points, maps imports/exports, identifies patterns, checks tests, and returns a structured summary.
+
+**When to use:** Before touching unfamiliar code. Instead of manually reading 10 files, this skill does it in a forked subagent — so the exploration tokens don't pollute your main context.
+
+**How to invoke:**
+```
+/explore-area src/api/
+/explore-area src/components/
+/explore-area auth
+```
+
+**Example output:**
+```
+## Area: src/api/
+
+### Key Files
+- routes/index.ts → all routes registered here
+- middleware/auth.ts → JWT validation
+
+### Patterns
+- One file per resource in routes/
+- Zod validation at route level
+
+### Gotchas
+- auth middleware is duplicated intentionally (different token validation)
+```
+
+---
+
+#### `/gen-context`
+
+**What it does:** Generates a fresh project context summary by analyzing package.json, project structure, entry points, framework, git history, and existing CLAUDE.md.
+
+**When to use:** At the start of a new session, or when the project has changed significantly. Gives Claude a full picture of the project without you explaining it.
+
+**How to invoke:**
+```
+/gen-context
+```
+
+**Example output:**
+```
+## Project: my-app
+## Stack: Next.js 14, TypeScript, Prisma, PostgreSQL
+
+### Commands
+- Dev: npm run dev
+- Test: npm test
+
+### Entry Points
+- app/layout.tsx → root layout
+- lib/db.ts → database connection
+
+### Suggested CLAUDE.md Updates
+- Missing: test command documentation
+- Missing: deployment flow
+```
+
+---
+
+#### `/smart-edit [what to change]`
+
+**What it does:** Before making any change, it first finds similar existing code in your codebase, reads at least 2 examples of the same pattern, checks conventions, then implements matching the exact style.
+
+**When to use:** When adding new features or modifying code. Ensures Claude follows YOUR patterns instead of generic ones.
+
+**How to invoke:**
+```
+/smart-edit Add a delete endpoint for users
+/smart-edit Add dark mode toggle to settings page
+/smart-edit Create a new database migration for adding email field
+```
+
+---
+
+#### `/token-check`
+
+**What it does:** Analyzes your current Claude Code session for token efficiency — what's loaded in context, how many MCP servers, conversation length, and whether you should compact or clear.
+
+**When to use:** When a session feels slow or expensive. Gives you a health report with specific optimization tips.
+
+**How to invoke:**
+```
+/token-check
+```
+
+**Example output:**
+```
+Session Health Report
+─────────────────────
+Context usage: ~120K / 200K
+Conversation turns: 23
+Suggested action: /compact
+Optimization tips:
+- 3 files read multiple times (users.ts, auth.ts, db.ts)
+- 2 MCP servers unused this session
+- CLAUDE.md is 340 lines (recommend < 200)
+```
+
+---
+
+### Rules (Path-Scoped Guidelines)
+
+Rules are markdown files in `~/.claude/rules/` that give Claude persistent context about your coding conventions. They use **path-scoping** — each rule only loads when Claude reads files matching specific patterns, so you don't waste tokens on irrelevant context.
+
+#### `frontend.md`
+
+**Activates when Claude reads:** `src/components/**`, `src/pages/**`, `**/*.tsx`, `**/*.jsx`
+
+**What it tells Claude:** Component structure, styling approach, key components, patterns to follow, and what NOT to do (e.g., no class components).
+
+**How it works:** You edit this file with your actual frontend conventions. When Claude opens a `.tsx` file, these rules automatically load. When Claude is working on backend code, these rules stay hidden — zero token cost.
+
+#### `backend.md`
+
+**Activates when Claude reads:** `src/api/**`, `src/routes/**`, `src/controllers/**`, `src/services/**`
+
+**What it tells Claude:** API structure (routes → controllers → services), how to add new endpoints step-by-step, error handling patterns, and things to never do (e.g., never put business logic in route handlers).
+
+#### `database.md`
+
+**Activates when Claude reads:** `src/database/**`, `src/models/**`, `prisma/**`, `**/*.sql`
+
+**What it tells Claude:** Which ORM you use, migration rules (never edit existing ones), model inventory, query patterns, and safety rules (never store passwords in plain text).
+
+#### `testing.md`
+
+**Activates when Claude reads:** `**/*.test.*`, `**/*.spec.*`, `tests/**`
+
+**What it tells Claude:** Test runner, file conventions, patterns (describe/it, AAA), what to test, what NOT to test, and test database setup.
+
+#### How to customize rules
+
+```bash
+# Edit any rule
+code ~/.claude/rules/frontend.md
+
+# Add a new rule
+code ~/.claude/rules/security.md
+```
+
+Add `paths:` frontmatter to scope when it loads:
+
+```yaml
+---
+paths:
+  - "src/api/**"
+  - "**/*.ts"
+---
+
+Your rules here...
+```
+
+---
+
+### Hooks (Automation Scripts)
+
+Hooks are shell scripts that run automatically at specific moments in Claude Code's lifecycle. They don't need to be invoked — they trigger on their own.
+
+#### `generate-context.sh`
+
+**Triggers:** Every time you start a new Claude Code session.
+
+**What it does:** Automatically injects your recent git commits, uncommitted changes, staged files, and current branch into Claude's context. Claude instantly knows what you've been working on without asking.
+
+**How it helps:** Eliminates the "what's the current state?" back-and-forth at the start of every session.
+
+#### `protect-files.sh`
+
+**Triggers:** Every time Claude tries to edit or write a file.
+
+**What it does:** Blocks Claude from modifying sensitive files — `.env`, credentials, lock files, `.git/`, private keys. If Claude tries, it gets a "BLOCKED" message explaining why.
+
+**How it helps:** Prevents accidental edits to files that should never be touched by AI. Peace of mind.
+
+**Protected by default:**
+- `.env`, `.env.local`, `.env.production`
+- `credentials.json`, `*.pem`, `*.key`
+- `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`
+- `.git/` directory
+
+#### `filter-test-output.sh`
+
+**Triggers:** After Claude runs a test command (`npm test`, `jest`, `pytest`, etc.).
+
+**What it does:** If test output exceeds 50 lines, it filters to show only pass/fail summary instead of the full verbose output. Full output stays in the terminal — Claude just gets the summary.
+
+**How it helps:** Test output can be thousands of lines. This saves massive token waste by only feeding Claude the information it actually needs (what passed, what failed).
+
+#### How to activate hooks
+
+Add to your project's `.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          { "type": "command", "command": "bash ~/.claude/hooks/generate-context.sh" }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          { "type": "command", "command": "bash ~/.claude/hooks/protect-files.sh" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Or copy the included settings template:
+
+```bash
+cp ~/.claude/hooks/../templates/.claude/settings.json ./.claude/settings.json
+```
+
+---
+
+### Templates
+
+#### `CLAUDE.md.template`
+
+A ready-to-fill template for your project's `CLAUDE.md` — the main file Claude reads at every session start. Includes sections for:
+
+- Build/test/lint commands
+- Entry points map
+- Request and data flow diagrams
 - Key decisions and gotchas
+- Code annotation tags
 
-**Token cost: ~200 tokens every turn**
+Copy to your project and fill in:
 
-### Layer 1 — Path-Scoped Rules (loaded when relevant)
+```bash
+cp ~/.claude/CLAUDE.md.template ./CLAUDE.md
+```
 
-`.claude/rules/*.md` files with `paths:` frontmatter. Only loaded when Claude reads files matching those paths.
+#### `claudeignore.template`
 
-**Token cost: ~500 tokens, only when working in that area**
+Pre-configured `.claudeignore` to prevent Claude from reading files that waste tokens — node_modules, build output, lock files, binary assets, IDE files, logs, and secrets.
 
-### Layer 2 — On-Demand Skills
+```bash
+cp ~/.claude/claudeignore.template ./.claudeignore
+```
 
-`.claude/skills/` for exploration and context generation. Run in forked subagents so tokens don't pollute your main context.
+---
 
-**Token cost: 0 in main context (runs in subagent)**
+## How It All Works Together
 
-### Layer 3 — Hooks (automatic)
+```
+Session Start
+    │
+    ├── Hook: generate-context.sh runs automatically
+    │   └── Claude sees: recent commits, uncommitted changes, current branch
+    │
+    ├── CLAUDE.md loaded (~200 tokens)
+    │   └── Claude sees: commands, entry points, flow diagrams, decisions
+    │
+    ├── .claudeignore active
+    │   └── Claude CANNOT see: node_modules, dist, lock files, .env
+    │
+    │
+You ask Claude to work on something
+    │
+    ├── Rules load based on what files Claude reads
+    │   ├── Touching frontend? → frontend.md loads
+    │   ├── Touching API? → backend.md loads
+    │   ├── Touching DB? → database.md loads
+    │   └── Touching tests? → testing.md loads
+    │
+    ├── You invoke a skill if needed
+    │   ├── /explore-area src/auth/ → deep dive in subagent
+    │   ├── /smart-edit Add feature → pattern-aware implementation
+    │   └── /token-check → session health report
+    │
+    └── Hook: protect-files.sh guards every edit
+        └── .env, credentials, lock files → BLOCKED
+```
 
-Session start hooks that inject fresh git state. Pre-tool hooks that protect sensitive files.
+**Total overhead: ~200 tokens always loaded.** Everything else loads on-demand.
 
-**Token cost: ~100 tokens (hook output only)**
+---
 
 ## Optimization Strategies
 
@@ -209,19 +386,21 @@ Session start hooks that inject fresh git state. Pre-tool hooks that protect sen
 | Exploration skill (forked) | ~25% | Low |
 | Session start hooks | ~10% | Medium |
 | Code annotations (@claude tags) | ~15% | Medium |
-| Cap thinking tokens | ~40% | Low |
 
-## Configuration Tips
+---
 
-Add to your Claude Code settings:
+## Examples
 
-```json
-{
-  "env": {
-    "MAX_THINKING_TOKENS": "10000"
-  }
-}
-```
+The `examples/` directory includes ready-to-use CLAUDE.md templates for:
+
+- **Next.js App** — App Router, Server Actions, Prisma, Tailwind
+- **Express API** — REST, Controllers, Services, JWT Auth
+- **Python FastAPI** — SQLAlchemy, Alembic, Pydantic v2
+- **Monorepo** — Turborepo, pnpm workspaces, shared packages
+
+Browse them on [GitHub](https://github.com/huzaifa525/claude-code-optimizer/tree/main/examples).
+
+---
 
 ## Contributing
 
