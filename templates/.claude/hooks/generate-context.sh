@@ -40,9 +40,3 @@ if [ -n "$BRANCH" ]; then
     echo "### Current Branch: $BRANCH"
     echo ""
 fi
-
-# Active plan detection
-if [ -f "task_plan.md" ]; then
-    echo "### Active Plan: task_plan.md exists — read it to continue previous work"
-    echo ""
-fi

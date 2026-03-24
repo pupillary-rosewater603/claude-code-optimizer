@@ -4,8 +4,8 @@
 # Runs on SessionStart — fully automatic, no manual steps
 # By Huzefa Nalkheda Wala | github.com/huzaifa525 | claude-code-optimizer
 
-# Skip if CLAUDE.md already exists
-if [ -f "CLAUDE.md" ] || [ -f ".claude/CLAUDE.md" ]; then
+# Skip if CLAUDE.md already exists or setup was already done
+if [ -f "CLAUDE.md" ] || [ -f ".claude/CLAUDE.md" ] || [ -f ".claude/.auto-setup-done" ]; then
     exit 0
 fi
 
@@ -32,20 +32,15 @@ FRAMEWORK=""
 
 if [ -f "package.json" ]; then
     STACK="Node.js"
-    # Extract scripts from package.json
-    BUILD_CMD=$(cat package.json | grep -o '"build":\s*"[^"]*"' | head -1 | sed 's/"build":\s*"//;s/"//')
-    TEST_CMD=$(cat package.json | grep -o '"test":\s*"[^"]*"' | head -1 | sed 's/"test":\s*"//;s/"//')
-    LINT_CMD=$(cat package.json | grep -o '"lint":\s*"[^"]*"' | head -1 | sed 's/"lint":\s*"//;s/"//')
-    DEV_CMD=$(cat package.json | grep -o '"dev":\s*"[^"]*"' | head -1 | sed 's/"dev":\s*"//;s/"//')
-
-    # Detect framework
-    if grep -q "next" package.json 2>/dev/null; then FRAMEWORK="Next.js"; fi
-    if grep -q "express" package.json 2>/dev/null; then FRAMEWORK="Express"; fi
-    if grep -q "fastify" package.json 2>/dev/null; then FRAMEWORK="Fastify"; fi
-    if grep -q "react" package.json 2>/dev/null && [ -z "$FRAMEWORK" ]; then FRAMEWORK="React"; fi
-    if grep -q "vue" package.json 2>/dev/null; then FRAMEWORK="Vue"; fi
-    if grep -q "svelte" package.json 2>/dev/null; then FRAMEWORK="SvelteKit"; fi
-    if grep -q "angular" package.json 2>/dev/null; then FRAMEWORK="Angular"; fi
+    # Extract scripts using node (portable, handles edge cases)
+    if command -v node &>/dev/null; then
+        BUILD_CMD=$(node -e "try{const p=require('./package.json');console.log(p.scripts?.build||'')}catch(e){}" 2>/dev/null)
+        TEST_CMD=$(node -e "try{const p=require('./package.json');console.log(p.scripts?.test||'')}catch(e){}" 2>/dev/null)
+        LINT_CMD=$(node -e "try{const p=require('./package.json');console.log(p.scripts?.lint||'')}catch(e){}" 2>/dev/null)
+        DEV_CMD=$(node -e "try{const p=require('./package.json');console.log(p.scripts?.dev||'')}catch(e){}" 2>/dev/null)
+        # Detect framework from dependencies (not from anywhere in the file)
+        FRAMEWORK=$(node -e "try{const p=require('./package.json');const d={...p.dependencies,...p.devDependencies};if(d.next)console.log('Next.js');else if(d.express)console.log('Express');else if(d.fastify)console.log('Fastify');else if(d['@angular/core'])console.log('Angular');else if(d.vue)console.log('Vue');else if(d.svelte||d['@sveltejs/kit'])console.log('SvelteKit');else if(d.react)console.log('React');else console.log('')}catch(e){}" 2>/dev/null)
+    fi
 elif [ -f "pyproject.toml" ] || [ -f "requirements.txt" ]; then
     STACK="Python"
     TEST_CMD="pytest"
@@ -187,6 +182,10 @@ coverage/
 .nyc_output/
 IGNOREEOF
 fi
+
+# ── Mark setup as done (prevents re-running if user deletes CLAUDE.md intentionally) ──
+mkdir -p .claude
+touch .claude/.auto-setup-done
 
 # ── Output to Claude's context ──
 echo ""

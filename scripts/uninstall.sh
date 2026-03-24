@@ -36,15 +36,17 @@ for skill in explore-area gen-context smart-edit token-check planning commit rev
 done
 
 # Rules
-remove_item "${CLAUDE_HOME}/rules/frontend.md" "Rule: frontend.md"
-remove_item "${CLAUDE_HOME}/rules/backend.md" "Rule: backend.md"
-remove_item "${CLAUDE_HOME}/rules/database.md" "Rule: database.md"
-remove_item "${CLAUDE_HOME}/rules/testing.md" "Rule: testing.md"
+for rule in frontend.md backend.md database.md testing.md token-optimization.md skill-router.md; do
+    remove_item "${CLAUDE_HOME}/rules/${rule}" "Rule: ${rule}"
+done
 
 # Hooks
 for hook in generate-context.sh protect-files.sh filter-test-output.sh block-dangerous.sh auto-format.sh commit-reminder.sh resume-plan.sh auto-setup.sh; do
     remove_item "${CLAUDE_HOME}/hooks/${hook}" "Hook: ${hook}"
 done
+
+# Settings
+remove_item "${CLAUDE_HOME}/settings.json" "settings.json"
 
 # Templates
 remove_item "${CLAUDE_HOME}/CLAUDE.md.template" "CLAUDE.md.template"

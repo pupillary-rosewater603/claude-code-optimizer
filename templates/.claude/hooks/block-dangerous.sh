@@ -1,49 +1,57 @@
 #!/bin/bash
 # block-dangerous.sh
-# Blocks dangerous bash commands that could cause irreversible damage
-# Add to .claude/settings.json under hooks.PreToolUse with matcher "Bash"
+# Blocks dangerous bash commands
 # By Huzefa Nalkheda Wala | github.com/huzaifa525 | claude-code-optimizer
 #
 # Exit 0 = allow, Exit 2 = block
 
 INPUT=$(cat)
-CMD=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+
+# Parse JSON with node (guaranteed to exist), fallback to jq
+if command -v node &>/dev/null; then
+    CMD=$(echo "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{console.log(JSON.parse(d).tool_input.command||'')}catch(e){console.log('')}})")
+elif command -v jq &>/dev/null; then
+    CMD=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+else
+    exit 0
+fi
 
 if [ -z "$CMD" ]; then
     exit 0
 fi
 
-# Dangerous patterns to block
-BLOCKED_PATTERNS=(
+# Normalize: lowercase for matching
+CMD_LOWER=$(echo "$CMD" | tr '[:upper:]' '[:lower:]')
+
+# Literal dangerous patterns (exact substring match)
+LITERAL_BLOCKS=(
     "rm -rf /"
     "rm -rf ~"
-    "rm -rf \*"
+    "rm -rf \$home"
     "rm -rf ."
+    "rm -fr /"
+    "rm -r -f /"
     "git push --force origin main"
     "git push --force origin master"
     "git push -f origin main"
     "git push -f origin master"
+    "git push origin main --force"
+    "git push origin master --force"
     "git reset --hard"
     "git clean -fd"
     "git checkout -- ."
-    "DROP TABLE"
-    "DROP DATABASE"
-    "TRUNCATE TABLE"
-    "DELETE FROM .* WHERE 1"
+    "drop table"
+    "drop database"
+    "truncate table"
     "> /dev/sda"
-    "mkfs"
-    "dd if="
+    "mkfs."
     ":(){:|:&};:"
-    "chmod -R 777 /"
-    "curl.*|.*bash"
-    "wget.*|.*bash"
-    "npm publish"
-    "pip upload"
+    "chmod -r 777 /"
 )
 
-for pattern in "${BLOCKED_PATTERNS[@]}"; do
-    if echo "$CMD" | grep -qiE "$pattern"; then
-        echo "BLOCKED: Command matches dangerous pattern '$pattern'. If you really need to run this, ask the user to run it manually." >&2
+for pattern in "${LITERAL_BLOCKS[@]}"; do
+    if echo "$CMD_LOWER" | grep -qiF "$pattern"; then
+        echo "BLOCKED: Command contains dangerous pattern '$pattern'. Ask the user to run it manually if needed." >&2
         exit 2
     fi
 done

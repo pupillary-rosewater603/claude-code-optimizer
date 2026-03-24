@@ -4,7 +4,12 @@ const fs = require("fs");
 const path = require("path");
 const os = require("os");
 
-const VERSION = "1.0.0";
+// Skip in CI/Docker/non-interactive environments (for postinstall safety)
+if (process.env.CI || process.env.DOCKER || process.env.GITHUB_ACTIONS || process.env.NETLIFY || process.env.VERCEL) {
+  process.exit(0);
+}
+
+const VERSION = require("../package.json").version;
 const CLAUDE_HOME = path.join(os.homedir(), ".claude");
 const TEMPLATES_DIR = path.join(__dirname, "..", "templates");
 
@@ -68,6 +73,25 @@ function copyFileIfNotExists(src, dest, label) {
   fs.copyFileSync(src, dest);
   success(label);
   return true;
+}
+
+// Dynamically count items in templates
+function countSkills() {
+  const skillsSrc = path.join(TEMPLATES_DIR, ".claude", "skills");
+  if (!fs.existsSync(skillsSrc)) return 0;
+  return fs.readdirSync(skillsSrc, { withFileTypes: true }).filter((e) => e.isDirectory()).length;
+}
+
+function countRules() {
+  const rulesSrc = path.join(TEMPLATES_DIR, ".claude", "rules");
+  if (!fs.existsSync(rulesSrc)) return 0;
+  return fs.readdirSync(rulesSrc).filter((f) => f.endsWith(".md")).length;
+}
+
+function countHooks() {
+  const hooksSrc = path.join(TEMPLATES_DIR, ".claude", "hooks");
+  if (!fs.existsSync(hooksSrc)) return 0;
+  return fs.readdirSync(hooksSrc).filter((f) => f.endsWith(".sh")).length;
 }
 
 function installGlobal() {
@@ -162,7 +186,6 @@ function installGlobal() {
           fs.mkdirSync(hooksDest, { recursive: true });
         }
         fs.copyFileSync(srcHook, destHook);
-        // Make executable on Unix
         try {
           fs.chmodSync(destHook, 0o755);
         } catch (_) {}
@@ -178,7 +201,7 @@ function installGlobal() {
 
   log("");
 
-  // Install settings.json globally (wires all hooks + MAX_THINKING_TOKENS)
+  // Install settings.json globally
   const settingsSrc = path.join(TEMPLATES_DIR, ".claude", "settings.json");
   const settingsDest = path.join(CLAUDE_HOME, "settings.json");
   if (fs.existsSync(settingsDest)) {
@@ -190,34 +213,28 @@ function installGlobal() {
 
   log("");
 
-  // Install CLAUDE.md template to ~/.claude/ (as a reference, not active)
+  // Install templates
   const claudeMdSrc = path.join(TEMPLATES_DIR, "CLAUDE.md");
   const claudeMdDest = path.join(CLAUDE_HOME, "CLAUDE.md.template");
-  copyFileIfNotExists(claudeMdSrc, claudeMdDest, "CLAUDE.md.template (use /setup in any repo to auto-generate)");
+  copyFileIfNotExists(claudeMdSrc, claudeMdDest, "CLAUDE.md.template");
 
-  // Install .claudeignore template
   const ignoreSrc = path.join(TEMPLATES_DIR, ".claudeignore");
   const ignoreDest = path.join(CLAUDE_HOME, "claudeignore.template");
-  copyFileIfNotExists(ignoreSrc, ignoreDest, "claudeignore.template (use /setup in any repo to auto-generate)");
+  copyFileIfNotExists(ignoreSrc, ignoreDest, "claudeignore.template");
 
   log("");
   log(`${BOLD}${GREEN}  Installation complete!${RESET}`);
   log("");
   log("  What was installed:");
-  log(`    ${CYAN}~/.claude/skills/${RESET}     21 skills (explore-area, gen-context, smart-edit, token-check,`);
-  log(`                          planning, commit, review, create-pr, fix-issue, tdd,`);
-  log(`                          debug-error, refactor, document, security-scan, perf-check,`);
-  log(`                          dep-check, changelog, migrate, onboard, plan, optimize-tokens)`);
-  log(`    ${CYAN}~/.claude/rules/${RESET}      4 rules (frontend, backend, database, testing)`);
-  log(`    ${CYAN}~/.claude/hooks/${RESET}      7 hooks (generate-context, protect-files, filter-test-output,`);
-  log(`                          block-dangerous, auto-format, commit-reminder, resume-plan)`);
-  log(`    ${CYAN}~/.claude/${RESET}            CLAUDE.md.template + claudeignore.template`);
+  log(`    ${CYAN}~/.claude/skills/${RESET}     ${countSkills()} skills`);
+  log(`    ${CYAN}~/.claude/rules/${RESET}      ${countRules()} rules`);
+  log(`    ${CYAN}~/.claude/hooks/${RESET}      ${countHooks()} hooks`);
+  log(`    ${CYAN}~/.claude/settings.json${RESET}  hooks wired + MAX_THINKING_TOKENS=10000`);
   log("");
   log("  Next steps:");
   log(`    1. Open Claude Code in any repo`);
-  log(`    2. Type ${CYAN}/setup${RESET} to auto-generate CLAUDE.md and .claudeignore for that project`);
+  log(`    2. Type ${CYAN}/setup${RESET} to auto-generate CLAUDE.md for that project`);
   log(`    3. Everything else works automatically`);
-  log(`    4. Or type ${CYAN}/explore-area src/${RESET} to explore`);
   log("");
 }
 
@@ -231,14 +248,12 @@ function installProject() {
   log(`  Installing to project: ${CYAN}${projectDir}${RESET}`);
   log("");
 
-  // CLAUDE.md
   copyFileIfNotExists(
     path.join(TEMPLATES_DIR, "CLAUDE.md"),
     path.join(projectDir, "CLAUDE.md"),
     "CLAUDE.md"
   );
 
-  // .claudeignore
   copyFileIfNotExists(
     path.join(TEMPLATES_DIR, ".claudeignore"),
     path.join(projectDir, ".claudeignore"),
@@ -247,10 +262,9 @@ function installProject() {
 
   log("");
 
-  // .claude directory
   const claudeDir = path.join(projectDir, ".claude");
 
-  // Skills
+  // Copy all skills dynamically
   const skillsSrc = path.join(TEMPLATES_DIR, ".claude", "skills");
   const skills = fs.readdirSync(skillsSrc, { withFileTypes: true }).filter((e) => e.isDirectory());
   for (const skill of skills) {
@@ -265,7 +279,7 @@ function installProject() {
 
   log("");
 
-  // Rules
+  // Copy all rules dynamically
   const rulesSrc = path.join(TEMPLATES_DIR, ".claude", "rules");
   const rules = fs.readdirSync(rulesSrc).filter((f) => f.endsWith(".md"));
   for (const rule of rules) {
@@ -283,7 +297,7 @@ function installProject() {
 
   log("");
 
-  // Hooks
+  // Copy all hooks dynamically
   const hooksSrc = path.join(TEMPLATES_DIR, ".claude", "hooks");
   const hooks = fs.readdirSync(hooksSrc).filter((f) => f.endsWith(".sh"));
   for (const hook of hooks) {
@@ -302,7 +316,6 @@ function installProject() {
 
   log("");
 
-  // Settings
   const settingsSrc = path.join(TEMPLATES_DIR, ".claude", "settings.json");
   const settingsDest = path.join(claudeDir, "settings.json");
   copyFileIfNotExists(settingsSrc, settingsDest, "settings.json (hook config)");
@@ -310,10 +323,8 @@ function installProject() {
   log("");
   log(`${BOLD}${GREEN}  Installation complete!${RESET}`);
   log("");
-  log("  Next steps:");
-  log("    1. Edit CLAUDE.md with your project details");
-  log("    2. Edit .claude/rules/ for your stack");
-  log(`    3. Start Claude Code and try: ${CYAN}/explore-area src/${RESET}`);
+  log(`  ${countSkills()} skills, ${countRules()} rules, ${countHooks()} hooks installed.`);
+  log("  Edit CLAUDE.md with your project details, then start Claude Code.");
   log("");
 }
 
@@ -322,20 +333,34 @@ function uninstall() {
   log(`${BOLD}  Claude Code Optimizer — Uninstall${RESET}`);
   log("");
 
-  const skillNames = [
-    "explore-area", "gen-context", "smart-edit", "token-check",
-    "planning", "commit", "review", "create-pr", "fix-issue", "tdd",
-    "debug-error", "refactor", "document", "security-scan", "perf-check",
-    "dep-check", "changelog", "migrate", "onboard", "plan", "optimize-tokens"
-  ];
+  // Dynamically find all installed skills
+  const skillsDir = path.join(CLAUDE_HOME, "skills");
+  const rulesDir = path.join(CLAUDE_HOME, "rules");
+  const hooksDir = path.join(CLAUDE_HOME, "hooks");
+
+  // Known skills from templates
+  const skillsSrc = path.join(TEMPLATES_DIR, ".claude", "skills");
+  const knownSkills = fs.existsSync(skillsSrc)
+    ? fs.readdirSync(skillsSrc, { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name)
+    : [];
+
+  // Known rules from templates
+  const rulesSrc = path.join(TEMPLATES_DIR, ".claude", "rules");
+  const knownRules = fs.existsSync(rulesSrc)
+    ? fs.readdirSync(rulesSrc).filter((f) => f.endsWith(".md"))
+    : [];
+
+  // Known hooks from templates
+  const hooksSrcDir = path.join(TEMPLATES_DIR, ".claude", "hooks");
+  const knownHooks = fs.existsSync(hooksSrcDir)
+    ? fs.readdirSync(hooksSrcDir).filter((f) => f.endsWith(".sh"))
+    : [];
 
   const items = [
-    ...skillNames.map((s) => ({ path: path.join(CLAUDE_HOME, "skills", s), label: `Skill: ${s}` })),
-    { path: path.join(CLAUDE_HOME, "rules", "frontend.md"), label: "Rule: frontend.md" },
-    { path: path.join(CLAUDE_HOME, "rules", "backend.md"), label: "Rule: backend.md" },
-    { path: path.join(CLAUDE_HOME, "rules", "database.md"), label: "Rule: database.md" },
-    { path: path.join(CLAUDE_HOME, "rules", "testing.md"), label: "Rule: testing.md" },
-    ...["generate-context", "protect-files", "filter-test-output", "block-dangerous", "auto-format", "commit-reminder", "resume-plan"].map((h) => ({ path: path.join(CLAUDE_HOME, "hooks", `${h}.sh`), label: `Hook: ${h}.sh` })),
+    ...knownSkills.map((s) => ({ path: path.join(skillsDir, s), label: `Skill: ${s}` })),
+    ...knownRules.map((r) => ({ path: path.join(rulesDir, r), label: `Rule: ${r}` })),
+    ...knownHooks.map((h) => ({ path: path.join(hooksDir, h), label: `Hook: ${h}` })),
+    { path: path.join(CLAUDE_HOME, "settings.json"), label: "settings.json" },
     { path: path.join(CLAUDE_HOME, "CLAUDE.md.template"), label: "CLAUDE.md.template" },
     { path: path.join(CLAUDE_HOME, "claudeignore.template"), label: "claudeignore.template" },
   ];
@@ -367,6 +392,7 @@ function showHelp() {
   log(`    ${CYAN}npx claude-code-optimizer${RESET}            Install globally to ~/.claude/`);
   log(`    ${CYAN}npx claude-code-optimizer --project${RESET}  Install to current project`);
   log(`    ${CYAN}npx claude-code-optimizer --uninstall${RESET} Remove global installation`);
+  log(`    ${CYAN}npx claude-code-optimizer --version${RESET}  Show version`);
   log(`    ${CYAN}npx claude-code-optimizer --help${RESET}     Show this help`);
   log("");
   log("  Aliases:");
@@ -382,10 +408,15 @@ const flag = args[0] || "";
 
 if (flag === "--help" || flag === "-h") {
   showHelp();
+} else if (flag === "--version" || flag === "-v") {
+  console.log(VERSION);
 } else if (flag === "--project" || flag === "-p") {
   installProject();
 } else if (flag === "--uninstall" || flag === "-u") {
   uninstall();
+} else if (flag && flag.startsWith("-")) {
+  console.error(`Unknown flag: ${flag}. Run with --help for usage.`);
+  process.exit(1);
 } else {
   installGlobal();
 }

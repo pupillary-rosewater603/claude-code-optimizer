@@ -1,10 +1,7 @@
 #!/bin/bash
 # resume-plan.sh
-# Detects task_plan.md on session start and injects it into context
-# Add to .claude/settings.json under hooks.SessionStart
+# Detects task_plan.md and injects summary (not full file) into context
 # By Huzefa Nalkheda Wala | github.com/huzaifa525 | claude-code-optimizer
-#
-# Works with the /planning skill to persist progress across sessions
 
 PLAN_FILE="task_plan.md"
 
@@ -12,10 +9,15 @@ if [ -f "$PLAN_FILE" ]; then
     echo ""
     echo "## Active Plan Detected"
     echo ""
-    echo "Found \`task_plan.md\` — you have an in-progress plan from a previous session."
-    echo "Read it and continue from the CURRENT step."
+    echo "Found \`task_plan.md\` — read it and continue from the CURRENT step."
     echo ""
-    cat "$PLAN_FILE"
+    # Show only first 30 lines to avoid context bloat
+    head -30 "$PLAN_FILE"
+    TOTAL=$(wc -l < "$PLAN_FILE")
+    if [ "$TOTAL" -gt 30 ]; then
+        echo ""
+        echo "... ($TOTAL total lines — read the full file to see remaining steps)"
+    fi
     echo ""
 fi
 

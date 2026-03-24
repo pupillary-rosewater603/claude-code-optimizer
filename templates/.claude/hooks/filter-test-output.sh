@@ -1,14 +1,20 @@
 #!/bin/bash
 # filter-test-output.sh
-# Filters verbose test output to show only failures
-# Add to .claude/settings.json under hooks.PostToolUse with matcher "Bash"
+# Filters verbose test/build/lint output to summary only
 # By Huzefa Nalkheda Wala | github.com/huzaifa525 | claude-code-optimizer
-#
-# Reduces token usage by stripping passing test details from context
 
 INPUT=$(cat)
-COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
-OUTPUT=$(echo "$INPUT" | jq -r '.stdout // empty' 2>/dev/null)
+
+# Parse JSON with node (guaranteed to exist), fallback to jq
+if command -v node &>/dev/null; then
+    COMMAND=$(echo "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);console.log(j.tool_input?.command||'')}catch(e){console.log('')}})")
+    OUTPUT=$(echo "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);console.log(j.tool_result?.stdout||j.tool_result||'')}catch(e){console.log('')}})")
+elif command -v jq &>/dev/null; then
+    COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty' 2>/dev/null)
+    OUTPUT=$(echo "$INPUT" | jq -r '.tool_result.stdout // .tool_result // empty' 2>/dev/null)
+else
+    exit 0
+fi
 
 # Only filter test, build, and lint commands
 case "$COMMAND" in
@@ -21,15 +27,13 @@ case "$COMMAND" in
         ;;
 esac
 
-# Count lines — only filter if output is large
 LINE_COUNT=$(echo "$OUTPUT" | wc -l)
 if [ "$LINE_COUNT" -lt 50 ]; then
     exit 0
 fi
 
-# Output a summary instead of full output
 echo "Test output was $LINE_COUNT lines. Showing summary only:"
 echo ""
 echo "$OUTPUT" | grep -E "(FAIL|PASS|ERROR|✓|✗|Tests:|Suites:|failed|passed|error)" | head -30
 echo ""
-echo "(Full output truncated to save tokens. Run the test command again to see full output.)"
+echo "(Full output truncated to save tokens.)"

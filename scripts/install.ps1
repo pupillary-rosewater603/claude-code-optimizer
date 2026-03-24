@@ -42,7 +42,7 @@ function Download-File {
 
 # Skills
 Write-Host "  Skills:"
-$Skills = @("explore-area", "gen-context", "smart-edit", "token-check", "planning", "commit", "review", "create-pr", "fix-issue", "tdd", "debug-error", "refactor", "document", "security-scan", "perf-check", "dep-check", "changelog", "migrate", "onboard", "plan", "optimize-tokens")
+$Skills = @("explore-area", "gen-context", "smart-edit", "token-check", "planning", "commit", "review", "create-pr", "fix-issue", "tdd", "debug-error", "refactor", "document", "security-scan", "perf-check", "dep-check", "changelog", "migrate", "onboard", "plan", "optimize-tokens", "setup")
 foreach ($Skill in $Skills) {
     Download-File `
         -Url "$BaseUrl/templates/.claude/skills/$Skill/SKILL.md" `

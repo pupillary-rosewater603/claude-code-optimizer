@@ -1,0 +1,12 @@
+# Ensure shell scripts always use LF line endings (even on Windows)
+*.sh text eol=lf
+
+# PowerShell uses CRLF
+*.ps1 text eol=crlf
+
+# Markdown and JSON use LF
+*.md text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.js text eol=lf

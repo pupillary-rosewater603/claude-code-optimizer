@@ -63,7 +63,7 @@ download() {
 
 # ── Skills ──
 echo "  Skills:"
-SKILLS="explore-area gen-context smart-edit token-check planning commit review create-pr fix-issue tdd debug-error refactor document security-scan perf-check dep-check changelog migrate onboard plan optimize-tokens"
+SKILLS="explore-area gen-context smart-edit token-check planning commit review create-pr fix-issue tdd debug-error refactor document security-scan perf-check dep-check changelog migrate onboard plan optimize-tokens setup"
 for skill in $SKILLS; do
     download \
         "${BASE_URL}/templates/.claude/skills/${skill}/SKILL.md" \

@@ -1,6 +1,6 @@
 {
   "name": "claude-code-optimizer",
-  "version": "2.4.0",
+  "version": "3.0.0",
   "description": "Optimize Claude Code token usage with smart rules, skills, hooks, and context templates",
   "author": "Huzefa Nalkheda Wala <huzaifanalkhedaemp@gmail.com> (https://huzefanalkhedawala.in)",
   "license": "MIT",
@@ -28,7 +28,7 @@
     "url": "https://github.com/huzaifa525/claude-code-optimizer/issues"
   },
   "scripts": {
-    "postinstall": "node bin/cli.js"
+    "postinstall": "node bin/cli.js || true"
   },
   "files": [
     "bin/",
@@ -38,6 +38,6 @@
     "LICENSE"
   ],
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   }
 }
