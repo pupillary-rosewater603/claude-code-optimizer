@@ -54,7 +54,7 @@ Write-Host ""
 
 # Rules
 Write-Host "  Rules:"
-$Rules = @("frontend.md", "backend.md", "database.md", "testing.md", "token-optimization.md")
+$Rules = @("frontend.md", "backend.md", "database.md", "testing.md", "token-optimization.md", "skill-router.md")
 foreach ($Rule in $Rules) {
     Download-File `
         -Url "$BaseUrl/templates/.claude/rules/$Rule" `

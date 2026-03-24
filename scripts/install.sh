@@ -74,7 +74,7 @@ echo ""
 
 # ── Rules ──
 echo "  Rules:"
-RULES="frontend.md backend.md database.md testing.md token-optimization.md"
+RULES="frontend.md backend.md database.md testing.md token-optimization.md skill-router.md"
 for rule in $RULES; do
     download \
         "${BASE_URL}/templates/.claude/rules/${rule}" \

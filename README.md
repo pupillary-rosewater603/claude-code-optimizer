@@ -84,7 +84,7 @@ cp ~/.claude/claudeignore.template ./.claudeignore
 | Type | Count | Installed To |
 | :--- | :---: | :--- |
 | Skills | 21 | `~/.claude/skills/` |
-| Rules | 5 | `~/.claude/rules/` |
+| Rules | 6 | `~/.claude/rules/` |
 | Hooks | 8 | `~/.claude/hooks/` |
 | Templates | 2 | `~/.claude/` |
 
@@ -369,6 +369,7 @@ Rules are markdown files in `~/.claude/rules/` that give Claude persistent conte
 | `backend.md` | `src/api/**`, `src/routes/**`, `src/controllers/**`, `src/services/**` | API structure (routes → controllers → services), endpoint patterns, error handling |
 | `database.md` | `src/database/**`, `src/models/**`, `prisma/**`, `**/*.sql` | ORM usage, migration rules, query patterns, safety rules |
 | `testing.md` | `**/*.test.*`, `**/*.spec.*`, `tests/**` | Test runner, file conventions, what to test, what NOT to test |
+| `skill-router.md` | Always active | Maps user intents to skills — "commit this" → `/commit`, "review" → `/review`, etc. |
 
 **How it works:** You edit these files with your actual conventions. When Claude opens a `.tsx` file, `frontend.md` loads automatically. When Claude is working on backend code, frontend rules stay hidden — zero token cost.
 
