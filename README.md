@@ -1,42 +1,63 @@
+<div align="center">
+
 # Claude Code Optimizer
 
-[![npm version](https://img.shields.io/npm/v/claude-code-optimizer.svg)](https://www.npmjs.com/package/claude-code-optimizer)
-[![npm downloads](https://img.shields.io/npm/dm/claude-code-optimizer.svg)](https://www.npmjs.com/package/claude-code-optimizer)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+### Stop burning tokens. Start shipping faster.
 
-> **Created by [Huzefa Nalkheda Wala](https://huzefanalkhedawala.in/)** — AI Product Engineer at Ruby CRM / CleverFlow \| [GitHub](https://github.com/huzaifa525) \| [LinkedIn](https://linkedin.com/in/huzefanalkheda) \| [HuggingFace](https://huggingface.co/huzaifa525)
+[![npm version](https://img.shields.io/npm/v/claude-code-optimizer.svg?style=for-the-badge&color=CB3837)](https://www.npmjs.com/package/claude-code-optimizer)
+[![npm downloads](https://img.shields.io/npm/dm/claude-code-optimizer.svg?style=for-the-badge&color=blue)](https://www.npmjs.com/package/claude-code-optimizer)
+[![GitHub stars](https://img.shields.io/github/stars/huzaifa525/claude-code-optimizer?style=for-the-badge&color=gold)](https://github.com/huzaifa525/claude-code-optimizer/stargazers)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![GitHub forks](https://img.shields.io/github/forks/huzaifa525/claude-code-optimizer?style=for-the-badge&color=teal)](https://github.com/huzaifa525/claude-code-optimizer/network/members)
 
-A complete toolkit to make Claude Code faster, cheaper, and smarter when working with your codebase.
+**The #1 toolkit to make Claude Code faster, cheaper, and smarter.**
+21 skills | 6 rules | 8 hooks | 2 templates — one install.
 
-**npm:** [npmjs.com/package/claude-code-optimizer](https://www.npmjs.com/package/claude-code-optimizer)
+[Get Started](#-quick-start) | [Features](#-what-you-get) | [Skills](#-skills-21-slash-commands) | [Author](#-meet-the-author)
+
+</div>
+
+---
+
+<div align="center">
+
+### Built by [Huzefa Nalkheda Wala](https://huzefanalkhedawala.in/) — AI Product Engineer & Medical AI Researcher
+
+[![Website](https://img.shields.io/badge/Website-huzefanalkhedawala.in-4285F4?style=flat-square&logo=google-chrome&logoColor=white)](https://huzefanalkhedawala.in/)
+[![GitHub](https://img.shields.io/badge/GitHub-huzaifa525-181717?style=flat-square&logo=github)](https://github.com/huzaifa525)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-huzefanalkheda-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/huzefanalkheda)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-huzaifa525-FFD21E?style=flat-square&logo=huggingface)](https://huggingface.co/huzaifa525)
+[![Medium](https://img.shields.io/badge/Medium-huzefanalkheda-000000?style=flat-square&logo=medium)](https://huzefanalkheda.medium.com/)
+
+</div>
 
 ---
 
 ## The Problem
 
-Claude Code explores your codebase on every session — running Glob, Grep, and Read calls that burn tokens. Without guidance, it:
+Every Claude Code session starts the same way — Claude explores your codebase from scratch. It runs 15-40 tool calls just to orient itself, re-reads the same files, misses your conventions, and burns tokens on discovery instead of doing actual work.
 
-- Wastes 5-15 tool calls just to orient itself
-- Re-reads the same files across sessions
-- Misses project conventions and makes wrong assumptions
-- Burns tokens on exploration instead of actual work
+**You're paying for exploration, not engineering.**
 
-## The Solution
+## The Fix
 
-A layered context system that gives Claude a **compass instead of a GPS** — just enough structure to navigate efficiently, loaded only when relevant.
+Claude Code Optimizer gives Claude a **compass instead of a GPS** — a layered context system that loads just enough structure, only when relevant.
 
-| Metric | Without Optimizer | With Optimizer |
+| | Without Optimizer | With Optimizer |
 | :--- | :---: | :---: |
 | Tool calls per task | ~20-40 | ~5-10 |
 | Session start | Full exploration | Targeted reads |
-| Conventions | No awareness | Follows patterns |
+| Conventions | No awareness | Follows your patterns |
 | Architecture | Re-discovers every time | Knows the map |
+| **Always-on token overhead** | **Unbounded** | **~300 tokens** |
+
+> One install. Zero config. Immediate savings.
 
 ---
 
-## Installation
+## Quick Start
 
-Install it — everything sets up automatically. No extra commands needed.
+Install it — everything sets up automatically.
 
 ### npm (Windows, Mac, Linux)
 
@@ -79,20 +100,20 @@ cp ~/.claude/claudeignore.template ./.claudeignore
 
 ---
 
-## What Gets Installed
+## What You Get
 
-| Type | Count | Installed To |
-| :--- | :---: | :--- |
-| Skills | 21 | `~/.claude/skills/` |
-| Rules | 6 | `~/.claude/rules/` |
-| Hooks | 8 | `~/.claude/hooks/` |
-| Templates | 2 | `~/.claude/` |
+| Type | Count | Installed To | Purpose |
+| :--- | :---: | :--- | :--- |
+| Skills | 21 | `~/.claude/skills/` | Slash commands for every workflow |
+| Rules | 6 | `~/.claude/rules/` | Path-scoped conventions that auto-load |
+| Hooks | 8 | `~/.claude/hooks/` | Automation scripts that run on their own |
+| Templates | 2 | `~/.claude/` | CLAUDE.md + .claudeignore starters |
 
 ---
 
-## Skills (Custom Slash Commands)
+## Skills (21 Slash Commands)
 
-Skills are commands you can invoke inside Claude Code with `/skill-name`. They run as specialized prompts that guide Claude to work smarter.
+Skills are commands you invoke inside Claude Code with `/skill-name`. They run as specialized prompts that guide Claude to work smarter.
 
 #### Exploration & Context
 
@@ -135,18 +156,18 @@ Skills are commands you can invoke inside Claude Code with `/skill-name`. They r
 | `/dep-check` | Outdated/vulnerable dependency check | `/dep-check` |
 | `/document` | Generate docs/JSDoc/docstrings | `/document src/utils/` |
 
-### `/explore-area [directory]`
+---
 
-**What it does:** Deep exploration of a codebase area before making changes. Reads entry points, maps imports/exports, identifies patterns, checks tests, and returns a structured summary.
+### Skill Deep Dives
 
-**When to use:** Before touching unfamiliar code. Instead of manually reading 10 files, this skill does it in a forked subagent — so the exploration tokens don't pollute your main context.
+<details>
+<summary><strong>/explore-area [directory]</strong> — Deep exploration before changes</summary>
 
-**How to invoke:**
+Reads entry points, maps imports/exports, identifies patterns, checks tests, and returns a structured summary — all in a forked subagent so exploration tokens don't pollute your main context.
 
 ```
 /explore-area src/api/
 /explore-area src/components/
-/explore-area auth
 ```
 
 **Example output:**
@@ -166,15 +187,12 @@ Skills are commands you can invoke inside Claude Code with `/skill-name`. They r
 - auth middleware is duplicated intentionally (different token validation)
 ```
 
----
+</details>
 
-### `/gen-context`
+<details>
+<summary><strong>/gen-context</strong> — Fresh project context in seconds</summary>
 
-**What it does:** Generates a fresh project context summary by analyzing package.json, project structure, entry points, framework, git history, and existing CLAUDE.md.
-
-**When to use:** At the start of a new session, or when the project has changed significantly. Gives Claude a full picture of the project without you explaining it.
-
-**How to invoke:**
+Analyzes package.json, project structure, entry points, framework, git history, and existing CLAUDE.md. Gives Claude a full picture without you explaining it.
 
 ```
 /gen-context
@@ -199,15 +217,12 @@ Skills are commands you can invoke inside Claude Code with `/skill-name`. They r
 - Missing: deployment flow
 ```
 
----
+</details>
 
-### `/smart-edit [what to change]`
+<details>
+<summary><strong>/smart-edit [what to change]</strong> — Pattern-aware code changes</summary>
 
-**What it does:** Before making any change, it first finds similar existing code in your codebase, reads at least 2 examples of the same pattern, checks conventions, then implements matching the exact style.
-
-**When to use:** When adding new features or modifying code. Ensures Claude follows YOUR patterns instead of generic ones.
-
-**How to invoke:**
+Before making any change, it finds similar existing code in your codebase, reads at least 2 examples of the same pattern, checks conventions, then implements matching your exact style.
 
 ```
 /smart-edit Add a delete endpoint for users
@@ -215,15 +230,12 @@ Skills are commands you can invoke inside Claude Code with `/skill-name`. They r
 /smart-edit Create a new database migration for adding email field
 ```
 
----
+</details>
 
-### `/token-check`
+<details>
+<summary><strong>/token-check</strong> — Session health report</summary>
 
-**What it does:** Analyzes your current Claude Code session for token efficiency — what's loaded in context, how many MCP servers, conversation length, and whether you should compact or clear.
-
-**When to use:** When a session feels slow or expensive. Gives you a health report with specific optimization tips.
-
-**How to invoke:**
+Analyzes your current session for token efficiency — context usage, MCP servers, conversation length, and optimization tips.
 
 ```
 /token-check
@@ -233,7 +245,7 @@ Skills are commands you can invoke inside Claude Code with `/skill-name`. They r
 
 ```
 Session Health Report
-─────────────────────
+---------------------
 Context usage: ~120K / 200K
 Conversation turns: 23
 Suggested action: /compact
@@ -243,119 +255,128 @@ Optimization tips:
 - CLAUDE.md is 340 lines (recommend < 200)
 ```
 
----
+</details>
 
-### `/planning`
+<details>
+<summary><strong>/planning</strong> — Persistent task tracking</summary>
 
-**What it does:** Automatically creates a `task_plan.md` file for complex tasks. Breaks work into steps, tracks progress with checkboxes, and survives across sessions. When you resume a session, Claude reads the plan and continues where it left off.
+Automatically creates `task_plan.md` for complex tasks. Breaks work into steps, tracks progress with checkboxes, and survives across sessions. **Auto-activates** when a task requires 5+ steps.
 
-**Auto-activates** when a task requires 5+ steps. No need to invoke manually.
+</details>
 
----
+<details>
+<summary><strong>/commit</strong> — Smart conventional commits</summary>
 
-### `/commit`
+Analyzes staged changes (`git diff --cached`), checks your recent commit style, and generates a conventional commit message (feat:, fix:, refactor:, etc.). Stage your changes with `git add`, then type `/commit`.
 
-**What it does:** Analyzes your staged changes (`git diff --cached`), checks your recent commit style, and generates a conventional commit message (feat:, fix:, refactor:, etc.). Then commits.
+</details>
 
-**How to invoke:** Stage your changes with `git add`, then type `/commit`.
+<details>
+<summary><strong>/review</strong> — Code review in a forked subagent</summary>
 
----
+Runs `git diff`, reads every changed file, and checks for code quality, security vulnerabilities, performance issues, and convention violations. Returns a structured report with severity levels. Review tokens stay isolated from your main context.
 
-### `/review`
+</details>
 
-**What it does:** Runs `git diff`, reads every changed file, and checks for code quality, security vulnerabilities, performance issues, and convention violations. Returns a structured report with severity levels.
+<details>
+<summary><strong>/create-pr</strong> — Auto-generated PRs</summary>
 
-**Runs in a forked subagent** — review tokens don't pollute your main context.
+Analyzes ALL commits on your branch (not just the latest), generates a PR title, summary bullets, change list, and test plan checklist. Pushes and creates the PR via `gh`.
 
----
+</details>
 
-### `/create-pr`
+<details>
+<summary><strong>/fix-issue [number]</strong> — End-to-end issue resolution</summary>
 
-**What it does:** Analyzes ALL commits on your branch (not just the latest), generates a PR title, summary bullets, change list, and test plan checklist. Pushes and creates the PR via `gh`.
+Fetches a GitHub issue, creates a branch, finds relevant code, implements the fix, writes tests, runs them, and commits with the issue number.
 
----
+```
+/fix-issue 42
+```
 
-### `/fix-issue [number]`
+</details>
 
-**What it does:** Fetches a GitHub issue, creates a branch, finds relevant code, implements the fix, writes tests, runs them, and commits with the issue number.
+<details>
+<summary><strong>/tdd [feature]</strong> — Test-Driven Development</summary>
 
-**How to invoke:** `/fix-issue 42`
+Strict TDD — writes a failing test first, implements the minimum code to pass, verifies, then refactors. Repeats until the feature is complete.
 
----
+</details>
 
-### `/tdd [feature]`
+<details>
+<summary><strong>/debug-error [error]</strong> — Root cause analysis</summary>
 
-**What it does:** Strict Test-Driven Development — writes a failing test first, implements the minimum code to pass, verifies, then refactors. Repeats until the feature is complete.
+Parses an error message or stack trace, traces the root cause through the codebase, checks recent git changes, implements a fix, and verifies.
 
----
+</details>
 
-### `/debug-error [error]`
+<details>
+<summary><strong>/refactor [target]</strong> — Safe refactoring</summary>
 
-**What it does:** Parses an error message or stack trace, traces the root cause through the codebase, checks recent git changes, implements a fix, and verifies.
+Runs tests first to establish a baseline, then refactors incrementally. After each change, runs tests again. If anything breaks, reverts immediately.
 
----
+</details>
 
-### `/refactor [target]`
+<details>
+<summary><strong>/security-scan</strong> — OWASP vulnerability scan</summary>
 
-**What it does:** Runs tests first to establish a baseline, then refactors incrementally. After each change, runs tests again. If anything breaks, reverts immediately.
+Scans for OWASP top 10 vulnerabilities — hardcoded secrets, SQL injection, XSS, missing auth, insecure configs, dependency vulnerabilities. Returns a severity-ranked report. Runs in a forked subagent.
 
----
+</details>
 
-### `/security-scan`
+<details>
+<summary><strong>/perf-check [target]</strong> — Performance analysis</summary>
 
-**What it does:** Scans for OWASP top 10 vulnerabilities — hardcoded secrets, SQL injection, XSS, missing auth, insecure configs, dependency vulnerabilities. Returns a severity-ranked report.
+Analyzes for N+1 queries, memory leaks, unnecessary re-renders, large bundle imports, missing caching, O(n^2) algorithms, and more. Runs in a forked subagent.
 
-**Runs in a forked subagent** — scan tokens stay isolated.
+</details>
 
----
+<details>
+<summary><strong>/dep-check</strong> — Dependency audit</summary>
 
-### `/perf-check [target]`
+Runs `npm audit` / `pip audit`, checks for outdated packages, flags deprecated dependencies, and suggests upgrades with breaking change warnings.
 
-**What it does:** Analyzes for N+1 queries, memory leaks, unnecessary re-renders, large bundle imports, missing caching, O(n²) algorithms, and more.
+</details>
 
-**Runs in a forked subagent.**
+<details>
+<summary><strong>/changelog</strong> — Auto-generated changelogs</summary>
 
----
+Generates a changelog from git history since the last tag. Groups commits by type (features, fixes, breaking changes). Outputs or updates CHANGELOG.md.
 
-### `/dep-check`
+</details>
 
-**What it does:** Runs `npm audit` / `pip audit`, checks for outdated packages, flags deprecated dependencies, and suggests upgrades with breaking change warnings.
+<details>
+<summary><strong>/migrate [from] [to]</strong> — Framework migration</summary>
 
----
+Greps for all usages of the old API/library, creates a migration plan, applies changes file by file, runs tests after each file, and reports what couldn't be auto-migrated.
 
-### `/changelog`
+```
+/migrate Express-v4 Express-v5
+/migrate React-Router-v5 React-Router-v6
+```
 
-**What it does:** Generates a changelog from git history since the last tag. Groups commits by type (features, fixes, breaking changes). Outputs or updates CHANGELOG.md.
+</details>
 
----
+<details>
+<summary><strong>/onboard</strong> — New developer guide</summary>
 
-### `/migrate [from] [to]`
+Generates a complete onboarding guide — project structure, tech stack, dev workflow, code conventions, common tasks, environment variables, and useful commands. Runs in a forked subagent.
 
-**What it does:** Greps for all usages of the old API/library, creates a migration plan, applies changes file by file, runs tests after each file, and reports what couldn't be auto-migrated.
+</details>
 
-**How to invoke:** `/migrate Express-v4 Express-v5` or `/migrate React-Router-v5 React-Router-v6`
+<details>
+<summary><strong>/plan [feature]</strong> — Implementation planning</summary>
 
----
+Creates a phased implementation plan with task breakdown, file mapping, reference code pointers, dependencies, and risk assessment. Runs in a forked subagent using the Plan agent.
 
-### `/onboard`
+</details>
 
-**What it does:** Generates a complete onboarding guide — project structure, tech stack, dev workflow, code conventions, common tasks, environment variables, and useful commands.
+<details>
+<summary><strong>/optimize-tokens</strong> — Token optimization tips</summary>
 
-**Runs in a forked subagent.**
+Searches the web for the latest Claude Code token optimization tips, then analyzes your current project setup (CLAUDE.md size, .claudeignore, rules, skills, MCP servers, settings). Returns a scored report with quick wins.
 
----
-
-### `/plan [feature]`
-
-**What it does:** Creates a phased implementation plan with task breakdown, file mapping, reference code pointers, dependencies, and risk assessment.
-
-**Runs in a forked subagent** using the Plan agent.
-
----
-
-### `/optimize-tokens`
-
-**What it does:** Searches the web for the latest Claude Code token optimization tips, then analyzes your current project setup (CLAUDE.md size, .claudeignore, rules, skills, MCP servers, settings). Returns a scored report with quick wins.
+</details>
 
 ---
 
@@ -366,10 +387,10 @@ Rules are markdown files in `~/.claude/rules/` that give Claude persistent conte
 | Rule | Activates When Claude Reads | What It Tells Claude |
 | :--- | :--- | :--- |
 | `frontend.md` | `src/components/**`, `src/pages/**`, `**/*.tsx`, `**/*.jsx` | Component structure, styling approach, patterns to follow, what NOT to do |
-| `backend.md` | `src/api/**`, `src/routes/**`, `src/controllers/**`, `src/services/**` | API structure (routes → controllers → services), endpoint patterns, error handling |
+| `backend.md` | `src/api/**`, `src/routes/**`, `src/controllers/**`, `src/services/**` | API structure (routes -> controllers -> services), endpoint patterns, error handling |
 | `database.md` | `src/database/**`, `src/models/**`, `prisma/**`, `**/*.sql` | ORM usage, migration rules, query patterns, safety rules |
 | `testing.md` | `**/*.test.*`, `**/*.spec.*`, `tests/**` | Test runner, file conventions, what to test, what NOT to test |
-| `skill-router.md` | Always active | Maps user intents to skills — "commit this" → `/commit`, "review" → `/review`, etc. |
+| `skill-router.md` | Always active | Maps user intents to skills — "commit this" -> `/commit`, "review" -> `/review`, etc. |
 
 **How it works:** You edit these files with your actual conventions. When Claude opens a `.tsx` file, `frontend.md` loads automatically. When Claude is working on backend code, frontend rules stay hidden — zero token cost.
 
@@ -412,15 +433,16 @@ Hooks are shell scripts that run automatically at specific moments in Claude Cod
 | `commit-reminder.sh` | When Claude stops responding | Reminds about uncommitted changes, suggests `/commit` |
 | `auto-setup.sh` | Every session start | Auto-generates `CLAUDE.md` and `.claudeignore` if missing — detects stack, framework, entry points, commands |
 
-### `generate-context.sh`
+<details>
+<summary><strong>Hook details</strong></summary>
 
-**How it helps:** Eliminates the "what's the current state?" back-and-forth at the start of every session. Claude instantly knows what you've been working on.
+#### `generate-context.sh`
 
-### `protect-files.sh`
+Eliminates the "what's the current state?" back-and-forth at the start of every session. Claude instantly knows what you've been working on.
 
-**How it helps:** Prevents accidental edits to files that should never be touched by AI.
+#### `protect-files.sh`
 
-**Protected by default:**
+Prevents accidental edits to files that should never be touched by AI.
 
 | Category | Files |
 | :--- | :--- |
@@ -429,9 +451,11 @@ Hooks are shell scripts that run automatically at specific moments in Claude Cod
 | Lock files | `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml` |
 | Git | `.git/` directory |
 
-### `filter-test-output.sh`
+#### `filter-test-output.sh`
 
-**How it helps:** Test output can be thousands of lines. This saves massive token waste by only feeding Claude the information it actually needs (what passed, what failed). Full output stays in your terminal.
+Test output can be thousands of lines. This saves massive token waste by only feeding Claude the information it actually needs (what passed, what failed). Full output stays in your terminal.
+
+</details>
 
 ### How to activate hooks
 
@@ -458,20 +482,6 @@ Add to your project's `.claude/settings.json`:
     ]
   }
 }
-```
-
----
-
-## Templates
-
-| Template | Copy To | Purpose |
-| :--- | :--- | :--- |
-| `CLAUDE.md.template` | `./CLAUDE.md` (project root) | Main project instructions — commands, entry points, flow diagrams, decisions |
-| `claudeignore.template` | `./.claudeignore` (project root) | Blocks Claude from reading node_modules, build output, lock files, secrets |
-
-```bash
-cp ~/.claude/CLAUDE.md.template ./CLAUDE.md
-cp ~/.claude/claudeignore.template ./.claudeignore
 ```
 
 ---
@@ -505,9 +515,9 @@ cp ~/.claude/claudeignore.template ./.claudeignore
 
 ---
 
-## Examples
+## Stack Templates
 
-The `examples/` directory includes ready-to-use CLAUDE.md templates for:
+The `examples/` directory includes ready-to-use CLAUDE.md templates for popular stacks:
 
 | Stack | Framework | Key Features |
 | :--- | :--- | :--- |
@@ -520,28 +530,59 @@ Browse them on [GitHub](https://github.com/huzaifa525/claude-code-optimizer/tree
 
 ---
 
-## Contributing
+## Star History
 
-1. Fork the repo
-2. Add your stack-specific example in `examples/`
-3. Submit a PR
+<div align="center">
+
+[![Star History Chart](https://api.star-history.com/svg?repos=huzaifa525/claude-code-optimizer&type=Date)](https://star-history.com/#huzaifa525/claude-code-optimizer&Date)
+
+</div>
+
+If this tool saves you tokens (and money), consider giving it a star — it helps others find it too.
 
 ---
 
-## Author
+## Contributing
 
-**Huzefa Nalkheda Wala** — AI Product Engineer & Medical AI Researcher
+We welcome contributions! Whether it's a new skill, a stack-specific template, or a bug fix:
 
-| Platform | Link |
+1. Fork the repo
+2. Create your feature branch
+3. Submit a PR
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+---
+
+## Meet the Author
+
+<div align="center">
+
+### Huzefa Nalkheda Wala
+
+**AI Product Engineer | Medical AI Researcher | Open Source Builder**
+
+</div>
+
+Building enterprise AI systems at **Ruby CRM / CleverFlow** (Dubai) — 45+ production features shipped with 99.5% uptime. Passionate about making AI-assisted development faster and more accessible for every developer.
+
+| | |
 | :--- | :--- |
 | Website | [huzefanalkhedawala.in](https://huzefanalkhedawala.in/) |
 | GitHub | [@huzaifa525](https://github.com/huzaifa525) |
 | LinkedIn | [huzefanalkheda](https://linkedin.com/in/huzefanalkheda) |
 | HuggingFace | [huzaifa525](https://huggingface.co/huzaifa525) |
 | Medium | [huzefanalkheda](https://huzefanalkheda.medium.com/) |
+| npm | [claude-code-optimizer](https://www.npmjs.com/package/claude-code-optimizer) |
 
-Currently building enterprise AI systems at Ruby CRM / CleverFlow (Dubai). 45+ production features shipped with 99.5% uptime.
+**Other projects:** Check out my [GitHub](https://github.com/huzaifa525) for more AI/ML tools and research.
 
-## License
+---
 
-MIT — Huzefa Nalkheda Wala
+<div align="center">
+
+**If Claude Code Optimizer saves you time and money, [star the repo](https://github.com/huzaifa525/claude-code-optimizer) and share it with your team.**
+
+MIT License -- Huzefa Nalkheda Wala
+
+</div>
