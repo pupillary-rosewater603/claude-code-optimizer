@@ -321,7 +321,7 @@ function installGlobal() {
   log(`    ${CYAN}~/.claude/sessions/${RESET}   persistent memory storage`);
   log(`    ${CYAN}~/.claude/settings.json${RESET}  hooks wired + MAX_THINKING_TOKENS=10000`);
   log("");
-  log("  New in v4.0.0:");
+  log("  New in v4:");
   log(`    ${GREEN}+${RESET} Two-stage code review (spec compliance → code quality)`);
   log(`    ${GREEN}+${RESET} Anti-rationalization patterns in TDD, review, security`);
   log(`    ${GREEN}+${RESET} /worktree — isolated git worktree development`);

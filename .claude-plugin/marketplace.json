@@ -9,7 +9,7 @@
   ],
   "features": [
     "25+ specialized skills for every workflow",
-    "10 automation hooks (protection, formatting, memory)",
+    "13 automation hooks (protection, formatting, memory)",
     "6 path-scoped rules (zero cost when inactive)",
     "Auto-setup with stack detection",
     "Persistent session memory across restarts",

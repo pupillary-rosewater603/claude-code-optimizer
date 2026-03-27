@@ -19,7 +19,7 @@ ACTIVITY_LOG="${TMPDIR:-/tmp}/cco-session-activity.log"
 
 # Collect session data
 BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
-RECENT_COMMITS=$(git log --oneline -3 --since="1 hour ago" 2>/dev/null)
+RECENT_COMMITS=$(git log --oneline -5 --since="8 hours ago" 2>/dev/null)
 MODIFIED=$(git diff --name-only 2>/dev/null)
 STAGED=$(git diff --cached --name-only 2>/dev/null)
 UNTRACKED=$(git ls-files --others --exclude-standard 2>/dev/null | head -10)

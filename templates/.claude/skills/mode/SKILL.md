@@ -1,6 +1,7 @@
 ---
 name: mode
 description: Use when the user wants to change optimization aggressiveness, switch between aggressive/balanced/thorough modes, or adjust token-saving behavior.
+disable-model-invocation: true
 allowed-tools: Read, Write, Bash
 argument-hint: "[aggressive|balanced|thorough]"
 ---

@@ -2,7 +2,7 @@
   "name": "claude-code-optimizer",
   "version": "4.0.1",
   "author_credit": "Huzefa Nalkheda Wala | github.com/huzaifa525",
-  "description": "Stop burning tokens. Start shipping faster. 25+ skills, 10 hooks, and 6 rules that cut Claude Code token usage by 50-70%.",
+  "description": "Stop burning tokens. Start shipping faster. 25+ skills, 13 hooks, and 6 rules that cut Claude Code token usage by 50-70%.",
   "author": {
     "name": "Huzefa Nalkheda Wala",
     "url": "https://huzefanalkhedawala.in"

@@ -70,7 +70,7 @@
         ]
       },
       {
-        "matcher": "Edit|Write|Bash|Read",
+        "matcher": "Edit|Write|Bash",
         "hooks": [
           {
             "type": "command",

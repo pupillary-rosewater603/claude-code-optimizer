@@ -3,30 +3,36 @@
 # Shows estimated token savings after Claude stops responding
 # By Huzefa Nalkheda Wala | github.com/huzaifa525 | claude-code-optimizer
 
-# Track session tool calls in a temp file
-TRACKER="/tmp/cco-session-tracker"
+ACTIVITY_LOG="${TMPDIR:-/tmp}/cco-session-activity.log"
+TRACKER="${TMPDIR:-/tmp}/cco-session-tracker"
 
-# Increment call count
-if [ -f "$TRACKER" ]; then
-    COUNT=$(cat "$TRACKER" 2>/dev/null || echo "0")
-    COUNT=$((COUNT + 1))
+# Count tool calls from the activity log (more accurate than counting stops)
+if [ -f "$ACTIVITY_LOG" ]; then
+    TOOL_CALLS=$(wc -l < "$ACTIVITY_LOG" 2>/dev/null || echo "0")
 else
-    COUNT=1
+    TOOL_CALLS=0
 fi
-echo "$COUNT" > "$TRACKER"
+
+# Track stop count separately for display frequency
+if [ -f "$TRACKER" ]; then
+    STOP_COUNT=$(cat "$TRACKER" 2>/dev/null || echo "0")
+    STOP_COUNT=$((STOP_COUNT + 1))
+else
+    STOP_COUNT=1
+fi
+echo "$STOP_COUNT" > "$TRACKER"
 
 # Show footer every 5th stop (not every single response)
-if [ $((COUNT % 5)) -ne 0 ]; then
+if [ $((STOP_COUNT % 5)) -ne 0 ]; then
     exit 0
 fi
 
-# Estimate savings based on typical optimization
-# Without optimizer: ~28 tool calls/task, ~3000 tokens/call = 84K tokens/task
-# With optimizer: ~8 tool calls/task, ~2000 tokens/call = 16K tokens/task
-# Savings per task: ~68K tokens
-# Rough estimate: savings = stop_count * 13K tokens (averaged across turns)
-
-SAVED_TOKENS=$((COUNT * 13000))
+# Estimate savings based on tool call reduction
+# Without optimizer: ~3000 tokens/call average
+# With optimizer: ~2000 tokens/call average (targeted reads, less exploration)
+# Savings per tool call: ~1000 tokens
+# Plus: ~5000 tokens saved per session from thinking cap + compaction
+SAVED_TOKENS=$(( (TOOL_CALLS * 1000) + 5000 ))
 
 if [ "$SAVED_TOKENS" -gt 1000000 ]; then
     DISPLAY="$(echo "scale=1; $SAVED_TOKENS / 1000000" | bc 2>/dev/null || echo "$((SAVED_TOKENS / 1000000))")M"

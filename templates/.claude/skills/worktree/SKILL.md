@@ -1,6 +1,7 @@
 ---
 name: worktree
 description: Use when the user wants to work in an isolated branch, start a safe development environment, or avoid polluting the main branch.
+disable-model-invocation: true
 allowed-tools: Bash, Read, Grep, Glob
 argument-hint: "[branch-name or feature description]"
 ---
@@ -31,12 +32,15 @@ If there are uncommitted changes, ask the user whether to stash or commit them f
 
 ### 2. Create the Worktree
 
-```bash
-# Create branch name from description (lowercase, hyphens)
-BRANCH_NAME="feature/$ARGUMENTS"  # sanitize: lowercase, replace spaces with hyphens
+Sanitize the branch name from the user's description:
+- Lowercase everything
+- Replace spaces and special characters with hyphens
+- Remove consecutive hyphens
+- Example: "User Notifications!" → `feature/user-notifications`
 
-# Create worktree
-git worktree add "../$(basename $PWD)-$BRANCH_NAME" -b "$BRANCH_NAME"
+```bash
+# Create worktree on a new branch
+git worktree add "../$(basename $PWD)-feature-$BRANCH_NAME" -b "feature/$BRANCH_NAME"
 ```
 
 ### 3. Verify Test Baseline

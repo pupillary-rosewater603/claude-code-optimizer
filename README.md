@@ -599,7 +599,7 @@ Add to your project's `.claude/settings.json`:
 
 | Stage | What Happens | Token Cost |
 | :--- | :--- | :---: |
-| **Session Start** | `generate-context.sh` + `memory-inject.sh` — Claude sees recent commits, changes, branch, and last session | ~150 |
+| **Session Start** | `generate-context.sh` + `memory-inject.sh` — Claude sees recent commits, changes, branch, and last session | ~300 |
 | **Always Loaded** | `CLAUDE.md` loads — Claude sees commands, entry points, flow diagrams, decisions | ~200 |
 | **Always Active** | `.claudeignore` blocks node_modules, dist, lock files, .env from being read | 0 |
 | **On-Demand** | Rules load based on what files Claude reads (frontend.md, backend.md, etc.) | ~500 when active |
@@ -608,7 +608,7 @@ Add to your project's `.claude/settings.json`:
 | **Every Edit** | `protect-files.sh` guards .env, credentials, lock files | ~10 |
 | **Session End** | `session-summary.sh` saves what was accomplished for next session | 0 (background) |
 
-**Total always-on overhead: ~350 tokens.** Everything else loads only when needed.
+**Total always-on overhead: ~500 tokens.** Everything else loads only when needed.
 
 ---
 
