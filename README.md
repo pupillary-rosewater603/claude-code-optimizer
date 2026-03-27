@@ -11,9 +11,9 @@
 [![GitHub forks](https://img.shields.io/github/forks/huzaifa525/claude-code-optimizer?style=for-the-badge&color=teal)](https://github.com/huzaifa525/claude-code-optimizer/network/members)
 
 **The #1 toolkit to make Claude Code faster, cheaper, and smarter.**
-21 skills | 6 rules | 8 hooks | 2 templates — one install.
+25 skills | 6 rules | 13 hooks | 2 templates — one install.
 
-[Get Started](#-quick-start) | [Features](#-what-you-get) | [Skills](#-skills-21-slash-commands) | [Author](#-meet-the-author)
+[Get Started](#-quick-start) | [What's New in v4](#-whats-new-in-v4) | [Skills](#-skills-25-slash-commands) | [Author](#-meet-the-author)
 
 </div>
 
@@ -49,9 +49,27 @@ Claude Code Optimizer gives Claude a **compass instead of a GPS** — a layered 
 | Session start | Full exploration | Targeted reads |
 | Conventions | No awareness | Follows your patterns |
 | Architecture | Re-discovers every time | Knows the map |
+| Session memory | Forgets everything | Remembers last session |
 | **Always-on token overhead** | **Unbounded** | **~300 tokens** |
 
 > One install. Zero config. Immediate savings.
+
+---
+
+## What's New in v4
+
+| Feature | What It Does |
+| :--- | :--- |
+| **Two-Stage Code Review** | `/review` now checks spec compliance first, then code quality — "Did you build the right thing?" before "Did you build it well?" |
+| **Anti-Rationalization** | `/tdd`, `/review`, and `/security-scan` now include iron laws, excuse tables, and loophole closure — inspired by [obra/superpowers](https://github.com/obra/superpowers) |
+| **Progressive Disclosure** | `/explore-area` uses 3 layers (file index -> entry points -> deep dive) for ~10x token savings on exploration |
+| **Persistent Session Memory** | Session summaries saved to `~/.claude/sessions/` and injected on next start — Claude remembers what you worked on last |
+| **Subagent-Driven Development** | `/subagent-dev` dispatches fresh subagents per task with two-stage review — controller never writes code directly |
+| **Git Worktree Isolation** | `/worktree` creates isolated workspaces for safe development with verified test baselines |
+| **Optimization Modes** | `/mode aggressive\|balanced\|thorough` — tune token-saving behavior for the task at hand |
+| **Auto-Upgrade** | `npm i -g claude-code-optimizer@latest` now auto-detects version changes and updates all files seamlessly |
+| **CSO-Optimized Descriptions** | All 25 skill descriptions rewritten as triggering conditions — Claude discovers the right skill more reliably |
+| **Plugin Marketplace** | `.claude-plugin/` manifest added for plugin marketplace discovery |
 
 ---
 
@@ -66,6 +84,20 @@ npm i -g claude-code-optimizer
 ```
 
 That's it. Skills, rules, hooks, and templates are installed to `~/.claude/` automatically.
+
+### Upgrading from v3?
+
+Just reinstall — the installer auto-detects your old version and updates everything:
+
+```bash
+npm i -g claude-code-optimizer@latest
+```
+
+All your skills, hooks, rules, and settings are updated seamlessly. Or force-update anytime:
+
+```bash
+npx claude-code-optimizer --update
+```
 
 ### curl (Mac, Linux, WSL)
 
@@ -104,14 +136,15 @@ cp ~/.claude/claudeignore.template ./.claudeignore
 
 | Type | Count | Installed To | Purpose |
 | :--- | :---: | :--- | :--- |
-| Skills | 21 | `~/.claude/skills/` | Slash commands for every workflow |
+| Skills | 25 | `~/.claude/skills/` | Slash commands for every workflow |
 | Rules | 6 | `~/.claude/rules/` | Path-scoped conventions that auto-load |
-| Hooks | 8 | `~/.claude/hooks/` | Automation scripts that run on their own |
+| Hooks | 13 | `~/.claude/hooks/` | Automation scripts that run on their own |
 | Templates | 2 | `~/.claude/` | CLAUDE.md + .claudeignore starters |
+| Sessions | - | `~/.claude/sessions/` | Persistent memory across restarts |
 
 ---
 
-## Skills (21 Slash Commands)
+## Skills (25 Slash Commands)
 
 Skills are commands you invoke inside Claude Code with `/skill-name`. They run as specialized prompts that guide Claude to work smarter.
 
@@ -119,7 +152,7 @@ Skills are commands you invoke inside Claude Code with `/skill-name`. They run a
 
 | Skill | Purpose | How to Invoke |
 | :--- | :--- | :--- |
-| `/explore-area` | Deep codebase exploration before changes | `/explore-area src/api/` |
+| `/explore-area` | Deep codebase exploration with progressive disclosure | `/explore-area src/api/` |
 | `/gen-context` | Generate fresh project context summary | `/gen-context` |
 | `/onboard` | Full onboarding guide for new developers | `/onboard` |
 | `/token-check` | Session token usage analysis | `/token-check` |
@@ -132,11 +165,13 @@ Skills are commands you invoke inside Claude Code with `/skill-name`. They run a
 | `/planning` | Persistent markdown planning for complex tasks | Auto-activates on complex tasks |
 | `/plan` | Create implementation plan with task breakdown | `/plan Add user notifications` |
 | `/smart-edit` | Pattern-aware code changes | `/smart-edit Add delete endpoint` |
-| `/tdd` | Test-Driven Development cycle | `/tdd user login validation` |
+| `/tdd` | Test-Driven Development with anti-rationalization | `/tdd user login validation` |
 | `/fix-issue` | Fetch GitHub issue, implement fix, test, commit | `/fix-issue 42` |
 | `/debug-error` | Analyze error, find root cause, fix | `/debug-error Cannot read property of undefined` |
 | `/refactor` | Refactor code while preserving behavior | `/refactor auth middleware` |
 | `/migrate` | Migrate between frameworks/versions | `/migrate React-Router-v5 React-Router-v6` |
+| `/worktree` | Isolated git worktree for safe development | `/worktree user-notifications` |
+| `/subagent-dev` | Dispatch fresh subagents per task with review | `/subagent-dev` |
 
 #### Git & GitHub
 
@@ -150,20 +185,33 @@ Skills are commands you invoke inside Claude Code with `/skill-name`. They run a
 
 | Skill | Purpose | How to Invoke |
 | :--- | :--- | :--- |
-| `/review` | Review changes for quality, security, performance | `/review` |
-| `/security-scan` | OWASP top 10, secrets, injection scan | `/security-scan` |
+| `/review` | Two-stage review: spec compliance then code quality | `/review` |
+| `/security-scan` | OWASP top 10, secrets, injection scan with anti-rationalization | `/security-scan` |
 | `/perf-check` | N+1 queries, memory leaks, bundle size analysis | `/perf-check src/api/` |
 | `/dep-check` | Outdated/vulnerable dependency check | `/dep-check` |
 | `/document` | Generate docs/JSDoc/docstrings | `/document src/utils/` |
+
+#### Optimization
+
+| Skill | Purpose | How to Invoke |
+| :--- | :--- | :--- |
+| `/mode` | Switch optimization mode (aggressive/balanced/thorough) | `/mode aggressive` |
+| `/setup` | Auto-generate CLAUDE.md and .claudeignore for project | `/setup` |
 
 ---
 
 ### Skill Deep Dives
 
 <details>
-<summary><strong>/explore-area [directory]</strong> — Deep exploration before changes</summary>
+<summary><strong>/explore-area [directory]</strong> — Progressive disclosure exploration</summary>
 
-Reads entry points, maps imports/exports, identifies patterns, checks tests, and returns a structured summary — all in a forked subagent so exploration tokens don't pollute your main context.
+Uses a 3-layer approach to minimize token cost:
+
+1. **Layer 1 (File Index)** — List files without reading contents. Often enough.
+2. **Layer 2 (Entry Points)** — Read index files and grep for exports/signatures.
+3. **Layer 3 (Deep Dive)** — Read full files only where needed, with offset/limit.
+
+Runs in a forked subagent so exploration tokens don't pollute your main context.
 
 ```
 /explore-area src/api/
@@ -175,11 +223,11 @@ Reads entry points, maps imports/exports, identifies patterns, checks tests, and
 ```
 ## Area: src/api/
 
-### Key Files
-- routes/index.ts → all routes registered here
+### Structure (12 files)
+- routes/index.ts → route registration
 - middleware/auth.ts → JWT validation
 
-### Patterns
+### Patterns to Follow
 - One file per resource in routes/
 - Zod validation at route level
 
@@ -190,31 +238,100 @@ Reads entry points, maps imports/exports, identifies patterns, checks tests, and
 </details>
 
 <details>
+<summary><strong>/review</strong> — Two-stage code review</summary>
+
+**Stage 1: Spec Compliance** — Does the code do what was intended? Checks intent against implementation, verifies all requirements are met, confirms correct files were modified. Must pass before Stage 2.
+
+**Stage 2: Code Quality** — Is the code well-written? Checks security, performance, code quality, and convention compliance.
+
+Includes anti-rationalization: a table of common excuses ("this is just a small change") with rebuttals ("small changes cause big bugs"). Runs in a forked subagent.
+
+</details>
+
+<details>
+<summary><strong>/tdd [feature]</strong> — Test-Driven Development with iron laws</summary>
+
+Strict RED-GREEN-REFACTOR with three iron laws:
+
+1. **No production code without a failing test.** Write code before test? DELETE it.
+2. **Write MINIMUM code to pass.** If the test passes, STOP.
+3. **Delete means delete.** Don't keep as reference. Don't adapt it. Don't look at it.
+
+Includes anti-rationalization table for common TDD excuses.
+
+```
+/tdd user login validation
+```
+
+</details>
+
+<details>
+<summary><strong>/worktree [branch-name]</strong> — Isolated git worktree development</summary>
+
+Creates a git worktree for safe, isolated development:
+
+1. Verifies clean baseline (no uncommitted changes)
+2. Creates worktree on a new branch
+3. Runs tests BEFORE any changes to verify baseline
+4. All work happens in isolation
+5. Presents merge/PR/keep/discard options when done
+
+```
+/worktree user-notifications
+/worktree fix-auth-bug
+```
+
+</details>
+
+<details>
+<summary><strong>/subagent-dev</strong> — Dispatch fresh subagents per task</summary>
+
+Inspired by [obra/superpowers](https://github.com/obra/superpowers). The controller (Claude) coordinates but never writes code directly:
+
+1. Load the plan (from `task_plan.md` or user's task list)
+2. For each task: dispatch implementer subagent → spec reviewer → quality reviewer
+3. Handle status: DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED
+4. Verify all tests pass at the end
+
+Each subagent gets fresh context — no pollution from previous tasks.
+
+</details>
+
+<details>
+<summary><strong>/mode [aggressive|balanced|thorough]</strong> — Optimization profiles</summary>
+
+| Mode | Thinking Budget | Best For |
+| :--- | :---: | :--- |
+| **Aggressive** | 4K tokens | Routine edits, simple bug fixes |
+| **Balanced** | 10K tokens | General development (default) |
+| **Thorough** | 32K tokens | Complex debugging, architecture, security |
+
+```
+/mode aggressive   # maximum savings
+/mode thorough     # maximum context
+/mode balanced     # back to default
+```
+
+</details>
+
+<details>
+<summary><strong>/security-scan</strong> — OWASP vulnerability scan with anti-rationalization</summary>
+
+Scans for OWASP top 10 vulnerabilities — hardcoded secrets, SQL injection, XSS, command injection, missing auth, insecure configs, dependency vulnerabilities. Returns a severity-ranked report.
+
+**Iron Law:** No "probably safe." Verify or flag. False positives are cheap. Missed vulnerabilities are not.
+
+Includes anti-rationalization for common security excuses ("this is internal code", "we're behind a firewall", "we'll fix it later"). Runs in a forked subagent.
+
+</details>
+
+<details>
 <summary><strong>/gen-context</strong> — Fresh project context in seconds</summary>
 
 Analyzes package.json, project structure, entry points, framework, git history, and existing CLAUDE.md. Gives Claude a full picture without you explaining it.
 
 ```
 /gen-context
-```
-
-**Example output:**
-
-```
-## Project: my-app
-## Stack: Next.js 14, TypeScript, Prisma, PostgreSQL
-
-### Commands
-- Dev: npm run dev
-- Test: npm test
-
-### Entry Points
-- app/layout.tsx → root layout
-- lib/db.ts → database connection
-
-### Suggested CLAUDE.md Updates
-- Missing: test command documentation
-- Missing: deployment flow
 ```
 
 </details>
@@ -272,13 +389,6 @@ Analyzes staged changes (`git diff --cached`), checks your recent commit style, 
 </details>
 
 <details>
-<summary><strong>/review</strong> — Code review in a forked subagent</summary>
-
-Runs `git diff`, reads every changed file, and checks for code quality, security vulnerabilities, performance issues, and convention violations. Returns a structured report with severity levels. Review tokens stay isolated from your main context.
-
-</details>
-
-<details>
 <summary><strong>/create-pr</strong> — Auto-generated PRs</summary>
 
 Analyzes ALL commits on your branch (not just the latest), generates a PR title, summary bullets, change list, and test plan checklist. Pushes and creates the PR via `gh`.
@@ -297,13 +407,6 @@ Fetches a GitHub issue, creates a branch, finds relevant code, implements the fi
 </details>
 
 <details>
-<summary><strong>/tdd [feature]</strong> — Test-Driven Development</summary>
-
-Strict TDD — writes a failing test first, implements the minimum code to pass, verifies, then refactors. Repeats until the feature is complete.
-
-</details>
-
-<details>
 <summary><strong>/debug-error [error]</strong> — Root cause analysis</summary>
 
 Parses an error message or stack trace, traces the root cause through the codebase, checks recent git changes, implements a fix, and verifies.
@@ -314,13 +417,6 @@ Parses an error message or stack trace, traces the root cause through the codeba
 <summary><strong>/refactor [target]</strong> — Safe refactoring</summary>
 
 Runs tests first to establish a baseline, then refactors incrementally. After each change, runs tests again. If anything breaks, reverts immediately.
-
-</details>
-
-<details>
-<summary><strong>/security-scan</strong> — OWASP vulnerability scan</summary>
-
-Scans for OWASP top 10 vulnerabilities — hardcoded secrets, SQL injection, XSS, missing auth, insecure configs, dependency vulnerabilities. Returns a severity-ranked report. Runs in a forked subagent.
 
 </details>
 
@@ -391,6 +487,7 @@ Rules are markdown files in `~/.claude/rules/` that give Claude persistent conte
 | `database.md` | `src/database/**`, `src/models/**`, `prisma/**`, `**/*.sql` | ORM usage, migration rules, query patterns, safety rules |
 | `testing.md` | `**/*.test.*`, `**/*.spec.*`, `tests/**` | Test runner, file conventions, what to test, what NOT to test |
 | `skill-router.md` | Always active | Maps user intents to skills — "commit this" -> `/commit`, "review" -> `/review`, etc. |
+| `token-optimization.md` | Always active | Thinking caps, model selection, compaction strategy, duplicate read prevention |
 
 **How it works:** You edit these files with your actual conventions. When Claude opens a `.tsx` file, `frontend.md` loads automatically. When Claude is working on backend code, frontend rules stay hidden — zero token cost.
 
@@ -424,21 +521,32 @@ Hooks are shell scripts that run automatically at specific moments in Claude Cod
 
 | Hook | Triggers On | What It Does |
 | :--- | :--- | :--- |
-| `generate-context.sh` | Every session start | Injects recent commits, uncommitted changes, branch, active plan into context |
+| `generate-context.sh` | Every session start | Injects recent commits, uncommitted changes, branch into context |
+| `memory-inject.sh` | Every session start | Injects last session's summary for persistent memory across restarts |
 | `resume-plan.sh` | Every session start | Detects task_plan.md and injects it so `/planning` continues across sessions |
+| `auto-setup.sh` | Every session start | Auto-generates `CLAUDE.md` and `.claudeignore` if missing — detects stack, framework, entry points |
+| `auto-update-check.sh` | Every session start (once/day) | Checks for new optimizer version and notifies you |
 | `protect-files.sh` | Every file edit/write | Blocks edits to `.env`, credentials, lock files, `.git/`, private keys |
 | `block-dangerous.sh` | Every bash command | Blocks `rm -rf /`, `git push --force main`, `DROP TABLE`, etc. |
 | `auto-format.sh` | After every file edit | Auto-runs prettier/black/gofmt/rustfmt on edited files |
 | `filter-test-output.sh` | After test/build/lint commands | Filters verbose output (50+ lines) to summary only |
+| `track-activity.sh` | After every tool use | Lightweight activity logger for session awareness |
 | `commit-reminder.sh` | When Claude stops responding | Reminds about uncommitted changes, suggests `/commit` |
-| `auto-setup.sh` | Every session start | Auto-generates `CLAUDE.md` and `.claudeignore` if missing — detects stack, framework, entry points, commands |
+| `session-summary.sh` | When Claude stops responding | Captures what was accomplished and saves to `~/.claude/sessions/` |
+| `token-savings-footer.sh` | Every 5th response | Shows estimated token savings this session |
 
 <details>
 <summary><strong>Hook details</strong></summary>
 
-#### `generate-context.sh`
+#### Persistent Session Memory
 
-Eliminates the "what's the current state?" back-and-forth at the start of every session. Claude instantly knows what you've been working on.
+Three hooks work together to give Claude memory across sessions:
+
+1. **`track-activity.sh`** (PostToolUse) — Logs tool usage timestamps during the session
+2. **`session-summary.sh`** (Stop) — Captures git changes, commits, and activity count into `~/.claude/sessions/`
+3. **`memory-inject.sh`** (SessionStart) — Injects the last session's summary so Claude knows what you worked on
+
+No database needed — just lightweight markdown files.
 
 #### `protect-files.sh`
 
@@ -466,9 +574,10 @@ Add to your project's `.claude/settings.json`:
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "startup",
+        "matcher": "",
         "hooks": [
-          { "type": "command", "command": "bash ~/.claude/hooks/generate-context.sh" }
+          { "type": "command", "command": "bash ~/.claude/hooks/generate-context.sh" },
+          { "type": "command", "command": "bash ~/.claude/hooks/memory-inject.sh" }
         ]
       }
     ],
@@ -490,15 +599,16 @@ Add to your project's `.claude/settings.json`:
 
 | Stage | What Happens | Token Cost |
 | :--- | :--- | :---: |
-| **Session Start** | `generate-context.sh` hook runs automatically — Claude sees recent commits, changes, branch | ~100 |
+| **Session Start** | `generate-context.sh` + `memory-inject.sh` — Claude sees recent commits, changes, branch, and last session | ~150 |
 | **Always Loaded** | `CLAUDE.md` loads — Claude sees commands, entry points, flow diagrams, decisions | ~200 |
 | **Always Active** | `.claudeignore` blocks node_modules, dist, lock files, .env from being read | 0 |
 | **On-Demand** | Rules load based on what files Claude reads (frontend.md, backend.md, etc.) | ~500 when active |
 | **Auto Planning** | `planning` skill activates on complex tasks — creates task_plan.md | ~200 |
-| **User Invoked** | 21 skills for commits, reviews, PRs, debugging, security, etc. | 0 in main context (forked) |
+| **User Invoked** | 25 skills for commits, reviews, PRs, debugging, security, worktrees, etc. | 0 in main context (forked) |
 | **Every Edit** | `protect-files.sh` guards .env, credentials, lock files | ~10 |
+| **Session End** | `session-summary.sh` saves what was accomplished for next session | 0 (background) |
 
-**Total always-on overhead: ~300 tokens.** Everything else loads only when needed.
+**Total always-on overhead: ~350 tokens.** Everything else loads only when needed.
 
 ---
 
@@ -509,9 +619,11 @@ Add to your project's `.claude/settings.json`:
 | Lean CLAUDE.md with entry points | ~30% | Low |
 | Path-scoped rules | ~20% | Medium |
 | `.claudeignore` | ~15% | Low |
-| Exploration skill (forked) | ~25% | Low |
-| Session start hooks | ~10% | Medium |
+| Progressive disclosure exploration (forked) | ~25% | Low |
+| Session start hooks + memory | ~10% | Medium |
 | Code annotations (`@claude` tags) | ~15% | Medium |
+| `/mode aggressive` | ~40% | Low |
+| Anti-rationalization in skills | ~10% | Low |
 
 ---
 
